@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>cns-ui</title>
+    <link rel="stylesheet" href="../src/styles.css">
+    <style type="text/css">
+        [ng:\cloak], [ng-cloak], .ng-cloak { display: none; }
+        .leftDiv { float: left; width: 600px; padding: 30px; }
+        .rightDiv { float: left;  padding: 30px; }
+        h1 { padding: 30px; }
+        .value { background-color: #5cb85c; color: #ffffff; padding: 2px 4px; border-radius: 4px; }
+        .code { margin-top: 50px; padding: 10px; }
+    </style>
+</head>
+<body ng-app="App" ng-controller="MainCtrl" ng-cloak>
+    <h1>Pagination</h1>
+    <div class="leftDiv">
+        <cns-scroll-pagination total-pages="146" ng-model="currentPage"></cns-scroll-pagination>
+        <div class="code">
+            <pre>
+&lt;cns-scroll-pagination
+    total-pages="146" ng-model="currentPage">&lt/cns-scroll-pagination>
+            </pre>
+        </div>
+    </div>
+    <div class="rightDiv">
+        <h2>Settings</h2>
+        <p><span class="value">ng-model</span>: Current page number.</p>
+        <p><span class="value">total-pages</span>: Total pages.</p>
+        <h2>Customize</h2>
+        <p>Use file 'styles/styles.css'</p>
+    </div>
+
+    <script type="text/javascript" src="../src/vendor/angular/angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="../src/scripts/cns.ui.js"></script>
+<!--    <script type="text/javascript" src="../src/scripts/cns.ui.min.js"></script>
+    <script type="text/javascript" src="../src/scripts/directives/pagination.js"></script>-->
+</body>
+</html>

@@ -1,0 +1,61 @@
+.cns-container {
+    width: 100%;
+    position: relative;
+}
+.cns-scroll-pagination-pages {
+    width: 100%;
+    font-size: 16px;
+    text-align: justify;
+    text-wrap: none;
+    overflow: hidden;
+    line-height: 40px;
+    height: 40px;
+}
+.cns-scroll-pagination-pages a {
+    text-align: center;
+    padding: 5px 20px;
+    color: #3071a9;
+    text-decoration: none;
+}
+.cns-scroll-pagination-pages a:hover {
+    text-decoration: none;
+    background-color: #eeeeee;
+}
+.cns-scroll-pagination-current {
+    color: #ffffff !important;
+    background-color: #bbbbbb;
+}
+.cns-scroll-pagination-current a {
+    color: #ffffff;
+}
+.cns-scroll-pagination-container {
+    position: relative;
+}
+.cns-scroll-pagination {
+    padding: 0;
+    width: 100%;
+    height: 4px;
+    background-color: #dddddd;
+}
+.cns-scroll-pagination-bar {
+    position: absolute;
+    left: 0;
+    width: 0;
+    height: 4px;
+    background-color: #777777;
+}
+.cns-scroll-pagination-button {
+    position: absolute;
+    left: 0;
+    width: 0;
+    top: 4px;
+    text-align: center;
+}
+#cns-scroll-pagination-icon {
+    cursor: pointer;
+}
+.cns-slider {
+    fill: #777777;
+    stroke: #707070;
+    stroke-width: 1.5;
+}

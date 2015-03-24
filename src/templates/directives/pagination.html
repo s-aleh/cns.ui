@@ -1,0 +1,18 @@
+<div class="cns-container">
+    <div class="cns-scroll-pagination-pages">
+        <a ng-repeat="page in pages track by $index" href="#" ng-click="setCurPage($index + 1)"
+           ng-class="{'cns-scroll-pagination-current': $index + 1 == ngModel}">{{$index + 1}}</a>
+    </div>
+    <div class="cns-scroll-pagination-container">
+        <div class="cns-scroll-pagination">
+            <div class="cns-scroll-pagination-bar"></div>
+            <div class="cns-scroll-pagination-button">
+                <span id="cns-scroll-pagination-icon">
+                    <svg height="15" width="15">
+                        <polygon points="7,0 8,0 0,15 15,15" class="cns-slider" />
+                    </svg>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
