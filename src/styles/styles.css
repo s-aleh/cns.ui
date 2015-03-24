@@ -59,3 +59,37 @@
     stroke: #707070;
     stroke-width: 1.5;
 }
+
+.cns-runner-main {
+    position: relative;
+    width: 100%;
+}
+.cns-runner-main, .cns-runner-left, .cns-runner-right, .cns-runner-bar {
+    height: 15px;
+}
+.cns-runner-left, .cns-runner-right {
+    position: absolute;
+    width: 15px;
+    top: 0;
+    cursor: pointer;
+    text-align: center;
+}
+.cns-runner-left {
+    left: 0;
+}
+.cns-runner-right {
+    right: 0;
+}
+.cns-runner-bar {
+    position: absolute;
+    width: 0;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    background-color: #333333;
+}
+.cns-runner-slider {
+    fill: #333333;
+    stroke: #222222;
+    stroke-width: 1.5;
+}

@@ -17,3 +17,15 @@ angular.module('myModule', ['cns.ui']);
 ```html
 <cns-scroll-pagination total-pages="146" ng-model="currentPage"></cns-scroll-pagination>
 ```
+
+##Runner
+
+```html
+<cns-runner total-pages="146" ng-model="currentPage"></cns-runner>
+```
+
+##Grow
+
+```html
+<cns-grow total-pages="146" ng-model="currentPage"></cns-grown>
+```

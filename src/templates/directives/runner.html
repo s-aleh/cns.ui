@@ -1,0 +1,13 @@
+<div class="cns-runner-main">
+    <div class="cns-runner-left" ng-click="setCurPage($event, 'prev')">
+        <svg height="{{h}}" width="{{w}}">
+            <polygon points="0,{{h / 2}} {{w - 2}},0 {{w - 2}},{{h}}" class="cns-runner-slider" />
+        </svg>
+    </div>
+    <div class="cns-runner-bar"></div>
+    <div class="cns-runner-right" ng-click="setCurPage($event,'next')">
+        <svg height="{{h}}" width="{{w}}">
+            <polygon points="2,0 {{w}},{{h / 2}} 2,{{h}}" class="cns-runner-slider" />
+        </svg>
+    </div>
+</div>
