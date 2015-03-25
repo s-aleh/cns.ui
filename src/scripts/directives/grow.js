@@ -17,9 +17,8 @@ angular.module('cns.ui.grow', [])
                 var rigthPoints = '2,0 ' +
                     (containerButton[0].clientHeight - 2) +',' + containerButton[0].clientHeight / 2 + ' ' +
                     '2,' + containerButton[0].clientHeight;
-                leftButton.attr('points', leftPoints);
-                rightButton.attr('points', rigthPoints);
-                ;
+                //leftButton.attr('points', leftPoints);
+                //rightButton.attr('points', rigthPoints);
                 var mainWidth = 0,
                     leftWidth = 0,
                     rightWidth = 0,
