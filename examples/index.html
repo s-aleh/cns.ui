@@ -10,6 +10,7 @@
         .rightDiv { float: left;  padding: 10px 30px; }
         h1 { padding: 10px 30px; }
         .value { background-color: #5cb85c; color: #ffffff; padding: 2px 4px; border-radius: 4px; }
+        .value-optional { background-color: #999999; }
         .code { margin-top: 50px; padding: 10px; }
         .clear { clear: both;}
     </style>
@@ -21,7 +22,7 @@
         <div class="code">
             <pre>
 &lt;cns-scroll-pagination
-    total-pages="30" ng-model="currentPage">&lt/cns-scroll-pagination>
+    total-pages="30" ng-model="currentPage" revers>&lt/cns-scroll-pagination>
             </pre>
         </div>
     </div>
@@ -29,6 +30,8 @@
         <h2>Settings</h2>
         <p><span class="value">ng-model</span>: Current page number.</p>
         <p><span class="value">total-pages</span>: Total pages.</p>
+        <h4>Optional</h4>
+        <p><span class="value value-optional">revers</span> <i>(Default: false)</i> Reverse pages</p>
         <h2>Customize</h2>
         <p>Use file 'styles/styles.css'</p>
     </div>

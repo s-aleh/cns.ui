@@ -5,10 +5,17 @@ angular.module('cns.ui.pagination', [])
         return {
             link: function(scope, element, attributes, controllers) {
                 scope.pages = new Array(Number(scope.totalPages));
+                scope.revers = angular.isUndefined(attributes.revers) ? false : true;
                 var divPages = angular.element(element[0].querySelector('.cns-scroll-pagination-pages')),
                     divScroll = angular.element(element[0].querySelector('.cns-scroll-pagination')),
                     divScrollBar = angular.element(element[0].querySelector('.cns-scroll-pagination-bar')),
-                    divScrollButton = angular.element(element[0].querySelector('.cns-scroll-pagination-button'));
+                    divScrollButton = angular.element(element[0].querySelector('.cns-scroll-pagination-button')),
+                    slider = angular.element(element[0].querySelector('#cns-ps')),
+                    containerSlider = angular.element(element[0].querySelector('#cns-psc'));
+                var points = containerSlider[0].clientHeight / 2 + ',0 '+
+                    '0,' + containerSlider[0].clientHeight + ' ' +
+                    containerSlider[0].clientWidth + ',' + containerSlider[0].clientHeight;
+                    slider.attr('points', points);
                 var paginationWidth = 0,
                     scrollWidth = 0,
                     scale = 0,

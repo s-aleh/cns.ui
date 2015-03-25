@@ -1,15 +1,17 @@
 <div class="cns-container">
     <div class="cns-scroll-pagination-pages">
-        <a ng-repeat="page in pages track by $index" href="#" ng-click="setCurPage($index + 1)"
+        <a ng-if="!revers" ng-repeat="page in pages track by $index" href="#" ng-click="setCurPage($index + 1)"
            ng-class="{'cns-scroll-pagination-current': $index + 1 == ngModel}">{{$index + 1}}</a>
+        <a ng-if="revers" ng-repeat="page in pages track by $index" href="#" ng-click="setCurPage(totalPages - $index)"
+           ng-class="{'cns-scroll-pagination-current': totalPages - $index == ngModel}">{{totalPages - $index}}</a>
     </div>
     <div class="cns-scroll-pagination-container">
         <div class="cns-scroll-pagination">
             <div class="cns-scroll-pagination-bar"></div>
             <div class="cns-scroll-pagination-button">
-                <span id="cns-scroll-pagination-icon">
-                    <svg height="15" width="15">
-                        <polygon points="7,0 8,0 0,15 15,15" class="cns-slider" />
+                <span>
+                    <svg width="15" height="15" id="cns-psc" class="cns-pagination-slider-container">
+                        <polygon id="cns-ps" class="cns-pagination-slider" points="7.5,0 0,15 15,15" />
                     </svg>
                 </span>
             </div>

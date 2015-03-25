@@ -1,3 +1,6 @@
+/**
+ * Pagination
+ */
 .cns-container {
     width: 100%;
     position: relative;
@@ -51,15 +54,19 @@
     top: 4px;
     text-align: center;
 }
-#cns-scroll-pagination-icon {
+.cns-pagination-slider-container {
+    width: 15px;
+    height: 15px;
     cursor: pointer;
 }
-.cns-slider {
+.cns-pagination-slider {
     fill: #777777;
     stroke: #707070;
     stroke-width: 1.5;
 }
-
+/**
+ * Runner
+ */
 .cns-runner-main {
     position: relative;
     width: 100%;
@@ -88,7 +95,25 @@
     cursor: pointer;
     background-color: #333333;
 }
-.cns-runner-slider {
+.cns-runner-button-container {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+.cns-runner-button {
+    fill: #333333;
+    stroke: #222222;
+    stroke-width: 1.5;
+}
+/**
+ * Grow
+ */
+.cns-grow-button-container {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+.cns-grow-button {
     fill: #333333;
     stroke: #222222;
     stroke-width: 1.5;

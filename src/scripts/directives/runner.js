@@ -7,7 +7,18 @@ angular.module('cns.ui.runner', [])
                 var divMain = angular.element(element[0].querySelector('.cns-runner-main')),
                     divLeft = angular.element(element[0].querySelector('.cns-runner-left')),
                     divRight = angular.element(element[0].querySelector('.cns-runner-right')),
-                    divBar = angular.element(element[0].querySelector('.cns-runner-bar'));
+                    divBar = angular.element(element[0].querySelector('.cns-runner-bar')),
+                    leftButton = angular.element(element[0].querySelector('#cns-rbl')),
+                    rightButton = angular.element(element[0].querySelector('#cns-rbr')),
+                    containerButton = angular.element(element[0].querySelector('.cns-runner-button-container'));
+                var leftPoints = '0,' + containerButton[0].clientHeight / 2 + ' ' +
+                        (containerButton[0].clientHeight - 2) + ',0 ' +
+                        (containerButton[0].clientWidth - 2) + ',' + containerButton[0].clientHeight;
+                var rigthPoints = '2,0 ' +
+                        (containerButton[0].clientHeight - 2) +',' + containerButton[0].clientHeight / 2 + ' ' +
+                        '2,' + containerButton[0].clientHeight;
+                leftButton.attr('points', leftPoints);
+                rightButton.attr('points', rigthPoints);
                 var mainWidth = 0,
                     leftWidth = 0,
                     rightWidth = 0,
