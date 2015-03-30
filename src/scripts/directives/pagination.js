@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cns.ui.pagination', [])
-    .directive('cnsScrollPagination', ['$timeout', '$document', function($timeout, $document){
+    .directive('cnsScrollPagination', ['$timeout', '$document', function($timeout, $document) {
         return {
             link: function(scope, element, attributes, controllers) {
                 scope.pages = new Array(Number(scope.totalPages));
@@ -12,10 +12,6 @@ angular.module('cns.ui.pagination', [])
                     divScrollButton = angular.element(element[0].querySelector('.cns-scroll-pagination-button')),
                     slider = angular.element(element[0].querySelector('#cns-ps')),
                     containerSlider = angular.element(element[0].querySelector('#cns-psc'));
-                var points = containerSlider[0].clientHeight / 2 + ',0 '+
-                    '0,' + containerSlider[0].clientHeight + ' ' +
-                    containerSlider[0].clientWidth + ',' + containerSlider[0].clientHeight;
-                    slider.attr('points', points);
                 var paginationWidth = 0,
                     scrollWidth = 0,
                     scale = 0,

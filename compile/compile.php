@@ -13,6 +13,7 @@ if ($scriptJs == null) {
 
 echo 'Found ' . $scriptJs . PHP_EOL;
 $jsLib = $repository->getLibName($scriptJs);
+$jsTLib = $repository->getTLibName($jsLib);
 
 echo 'Read js files...' . PHP_EOL;
 $directives = $repository->readFiles($scriptsPath . '/directives/');
@@ -20,10 +21,8 @@ echo 'Read html files...' . PHP_EOL;
 $templates = $repository->readFiles($templatesPath . '/directives/');
 
 echo 'Create library ' . $jsLib . PHP_EOL;
-$jsFile = fopen($scriptJs, 'r');
-$contentJs = fread($jsFile, filesize($scriptJs));
-fclose($jsFile);
 
+$contentJs = $repository->getContent($scriptJs, $jsTLib);
 $templateName = $template->getTemplateByName($directives);
 
 $compileTemplates = [];
@@ -45,8 +44,18 @@ echo 'Finished';
 
 // Class repositoryFile
 class repositoryFile {
+    public function getContent($fname, $libName) {
+        $jsFile = fopen($fname, 'r');
+        $contentJs = fread($jsFile, filesize($fname));
+        fclose($jsFile);
+        $contentJs = str_replace("[", "['" . $libName . '\', ', $contentJs);
+        return $contentJs;
+    }
+    public function getTLibName($str) {
+        return str_replace(".js", "", $str) . '.templates';
+    }
     public function getLibName($file) {
-        return str_replace(".min", "", basename(str_replace("\\", "/", $file)));        
+        return str_replace(".min", "", basename(str_replace("\\", "/", $file)));
     }
     public function getFileName($path) {
         foreach(glob($path) as $file)
