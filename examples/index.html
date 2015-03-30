@@ -12,7 +12,8 @@
         .value { background-color: #5cb85c; color: #ffffff; padding: 2px 4px; border-radius: 4px; }
         .value-optional { background-color: #999999; }
         .code { margin-top: 50px; padding: 10px; }
-        .clear { clear: both;}
+        .clear { clear: both; }
+        .scroll { width: 100%; height: 200px; position: relative; padding: 10px; }
     </style>
 </head>
 <body ng-app="App" ng-controller="MainCtrl" ng-cloak>
@@ -22,7 +23,7 @@
         <div class="code">
             <pre>
 &lt;cns-scroll-pagination
-    total-pages="30" ng-model="currentPage" revers>&lt/cns-scroll-pagination>
+    total-pages="30" ng-model="currentPage" revers>&lt;/cns-scroll-pagination>
             </pre>
         </div>
     </div>
@@ -73,12 +74,39 @@
     </div>
     <div class="clear"></div>
 
+    <h1>Scrolling</h1>
+    <div class="leftDiv">
+        <div class="scroll" cns-scroll>
+            <p>1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a neque pretium nisl scelerisque bibendum. Nullam id lorem feugiat, lobortis quam a, sodales tellus. Quisque semper egestas libero sit amet consequat. Proin consectetur risus a volutpat ullamcorper. Aliquam non laoreet ipsum, sed rhoncus leo. Etiam a sapien sodales, placerat justo id, lacinia metus. Donec fringilla libero quis suscipit molestie. Aliquam ullamcorper, lorem ac dignissim tincidunt, sem ex tempor ante, a viverra tortor purus nec magna. Vivamus tincidunt accumsan semper. Ut in consequat neque. Phasellus ornare ante nunc, eget pharetra mauris sollicitudin nec. Nam in scelerisque est, vel placerat ligula. Sed eget condimentum lacus. Nam fringilla massa sed accumsan commodo. Donec lacinia mattis ligula at congue.</p>
+            <p>2. Vestibulum eget mi eu purus pulvinar tempor ac sed nibh. Donec eget condimentum elit, vel faucibus est. Sed malesuada efficitur risus id pulvinar. Phasellus bibendum erat mi, sit amet tristique velit ullamcorper nec. Cras fermentum sagittis est, vel condimentum massa. Suspendisse eget ullamcorper urna. Praesent sem felis, luctus eget nisi at, vulputate scelerisque arcu. Curabitur ultrices mauris vel erat lacinia dignissim. In hac habitasse platea dictumst.</p>
+            <p>3. Nullam iaculis vitae sem eu hendrerit. Cras dapibus dignissim leo a facilisis. Cras venenatis velit mollis ullamcorper ultrices. Ut condimentum lorem turpis, non laoreet ex porta quis. Mauris elementum diam ut risus semper euismod. Fusce risus nulla, molestie at laoreet ut, pharetra quis turpis. Aliquam sodales eget sapien in feugiat. Donec sollicitudin mollis quam, quis tincidunt urna maximus sit amet. Sed dignissim diam vitae augue varius, vitae imperdiet sapien egestas. Pellentesque vel nisi vitae metus gravida pretium. Aliquam id sapien at felis luctus feugiat. Sed vehicula facilisis leo, sit amet ullamcorper nibh vehicula sit amet. Aliquam erat volutpat. Donec ornare lorem lectus, non rutrum sapien posuere id. Cras ullamcorper dictum purus, eleifend iaculis orci finibus vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+            <p>4. Aenean sed purus facilisis, tempus mauris iaculis, consequat nunc. Nulla dignissim turpis vitae erat interdum faucibus. Sed ultricies laoreet urna, sit amet dictum tellus gravida sed. Maecenas vitae tempor elit. In ut augue in ipsum luctus faucibus. Nam euismod magna ut tempus varius. Donec quis dapibus ex, lacinia luctus lorem. Nunc viverra libero ut nibh interdum, et iaculis augue imperdiet. Sed mollis accumsan risus, in ornare massa vulputate ut. Sed consectetur auctor leo nec vehicula.</p>
+            <p>5. Aliquam ex dolor, luctus facilisis ultrices eu, rutrum id arcu. Cras vitae vulputate felis, non elementum velit. Sed imperdiet vulputate orci sit amet rutrum. Praesent vel tristique justo, vitae varius libero. Proin nunc arcu, consequat sed vehicula vel, pretium et nibh. Nam porta eget neque in porta. Vestibulum at mi pulvinar, tincidunt dui a, consequat nibh. Praesent erat enim, tempor et magna ac, feugiat ultricies est. Curabitur blandit vulputate nisi, a varius tellus posuere quis. Fusce a turpis metus. Quisque euismod fringilla eros vitae pretium. Sed nulla urna, elementum ac vehicula non, pharetra vel mauris.</p>
+        </div>
+        <div class="code">
+            <pre>
+        &lt;div cns-scroll top left>...&lt;/div>
+            </pre>
+        </div>
+    </div>
+    <div class="rightDiv">
+        <h2>Settings</h2>
+        <p><span class="value">cns-scroll</span>: Scrolling. <i>(Default position: rigth, bottom)</i></p>
+        <h4>Optional</h4>
+        <p><span class="value value-optional">top</span>: Scrollbar top. <i></i></p>
+        <p><span class="value value-optional">left</span>: Scrollbar left. <i></i></p>
+        <h2>Customize</h2>
+        <p>Use file 'styles/styles.css'</p>
+    </div>
+    <div class="clear"></div>
+
     <script type="text/javascript" src="../src/vendor/angular/angular.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
-    <!--<script type="text/javascript" src="../src/scripts/cns.ui.js"></script>-->
-    <script type="text/javascript" src="../src/scripts/cns.ui.min.js"></script>
+    <script type="text/javascript" src="../src/scripts/cns.ui.js"></script>
+    <!--<script type="text/javascript" src="../src/scripts/cns.ui.min.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/pagination.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/runner.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/grow.js"></script>
+    <script type="text/javascript" src="../src/scripts/directives/scroll.js"></script>-->
 </body>
 </html>
