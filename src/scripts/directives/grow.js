@@ -4,21 +4,22 @@ angular.module('cns.ui.grow', [])
     .directive('cnsGrow', ['$timeout', '$document', function($timeout, $document) {
         return {
             link: function(scope, element, attributes) {
-                var divMain = angular.element(element[0].querySelector('.cns-runner-main')),
-                    divLeft = angular.element(element[0].querySelector('.cns-runner-left')),
-                    divRight = angular.element(element[0].querySelector('.cns-runner-right')),
-                    divBar = angular.element(element[0].querySelector('.cns-runner-bar')),
-                    leftButton = angular.element(element[0].querySelector('#cns-gbl')),
-                    rightButton = angular.element(element[0].querySelector('#cns-gbr')),
-                    containerButton = angular.element(element[0].querySelector('.cns-grow-button-container'));
-                var leftPoints = '0,' + containerButton[0].clientHeight / 2 + ' ' +
-                    (containerButton[0].clientHeight - 2) + ',0 ' +
-                    (containerButton[0].clientWidth - 2) + ',' + containerButton[0].clientHeight;
-                var rigthPoints = '2,0 ' +
-                    (containerButton[0].clientHeight - 2) +',' + containerButton[0].clientHeight / 2 + ' ' +
-                    '2,' + containerButton[0].clientHeight;
-                //leftButton.attr('points', leftPoints);
-                //rightButton.attr('points', rigthPoints);
+                var divMain = angular.element(element[0].querySelector('.cns-grow-main')),
+                    divLeft = angular.element(element[0].querySelector('.cns-grow-left')),
+                    divRight = angular.element(element[0].querySelector('.cns-grow-right')),
+                    divBar = angular.element(element[0].querySelector('.cns-grow-bar'));
+                var leftPoints = '0,' + divLeft[0].clientHeight / 2 + ' ' + (divLeft[0].clientWidth - 2) + ',0 ' +
+                    (divLeft[0].clientWidth - 2) + ',' + divLeft[0].clientHeight;
+                var arrowLeft = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+                    '<polygon points="' + leftPoints + '" class="cns-grow-button" />' +
+                    '</svg>';
+                divLeft.html(arrowLeft);
+                var rightPoints = '2,0 ' + divRight[0].clientWidth +',' + divRight[0].clientHeight / 2 + ' ' +
+                    '2,' + divRight[0].clientHeight;
+                var arrowRight = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+                    '<polygon points="' + rightPoints+ '" class="cns-grow-button" />' +
+                    '</svg>';
+                divRight.html(arrowRight);
                 var mainWidth = 0,
                     leftWidth = 0,
                     rightWidth = 0,
