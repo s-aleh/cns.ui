@@ -3,7 +3,7 @@
 angular.module('cns.ui.pagination', [])
     .directive('cnsScrollPagination', ['$timeout', '$document', function($timeout, $document) {
         return {
-            link: function(scope, element, attributes, controllers) {
+            link: function(scope, element, attributes) {
                 scope.pages = new Array(Number(scope.totalPages));
                 scope.revers = angular.isUndefined(attributes.revers) ? false : true;
                 var divPages = angular.element(element[0].querySelector('.cns-scroll-pagination-pages')),
@@ -16,14 +16,24 @@ angular.module('cns.ui.pagination', [])
                     scrollWidth = 0,
                     scale = 0,
                     scrollBarWidth = 0;
-                $timeout(function() {
+                function init() {
                     paginationWidth = divPages[0].scrollWidth;
                     scrollWidth = divScroll[0].scrollWidth;
                     scale = paginationWidth / scrollWidth;
                     scrollBarWidth = scrollWidth / scale;
                     divScrollBar.css({width: Math.round(scrollBarWidth) + 'px'});
                     divScrollButton.css({width: Math.round(scrollBarWidth) + 'px'});
-                }, 0);
+                    if(x + scrollBarWidth > scrollWidth) {
+                        x = scrollWidth - scrollBarWidth;
+                        divScrollBar.css({left: Math.round(x) + 'px'});
+                        divScrollButton.css({left: Math.round(x) + 'px'});
+                    }
+                }
+                $timeout(init, 0);
+                scope.$watch("totalPages", function($old, $new) {
+                    scope.pages = new Array(Number(scope.totalPages));
+                    $timeout(init, 0);
+                });
                 var startX = 0, x = 0;
                 divScrollButton.on('mousedown', function(event) {
                     event.preventDefault();

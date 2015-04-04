@@ -30,15 +30,18 @@ angular.module('cns.ui.grow', [])
                     leftWidth = 0,
                     rightWidth = 0,
                     barWidth = 0;
-                $timeout(function() {
-                    scope.w = divLeft[0].clientWidth;
-                    scope.h = divLeft[0].clientHeight;
+                function init() {
+                    scope.ngModel = Number(scope.ngModel);
+                    scope.totalPages = Number(scope.totalPages);
+                    scope.ngModel = scope.ngModel > scope.totalPages ? scope.totalPages : scope.ngModel;
+                    scope.ngModel = scope.ngModel < 1 ? 1 : scope.ngModel;
                     mainWidth = divMain[0].clientWidth;
                     leftWidth = divLeft[0].clientWidth;
                     rightWidth = divRight[0].clientWidth;
                     barWidth = (mainWidth - leftWidth - rightWidth) / scope.totalPages;
-                    divBar.css({left: leftWidth + 'px', width: Math.round(barWidth) + 'px'});
-                }, 0);
+                    divBar.css({left: leftWidth + 'px', width: Math.round(barWidth * scope.ngModel) + 'px'});
+                }
+                $timeout(init, 0);
                 var startX = 0, x = 0;
                 divBar.on('mousedown', function(event) {
                     event.preventDefault();
@@ -58,9 +61,8 @@ angular.module('cns.ui.grow', [])
                     $document.off('mousemove', mousemove);
                     $document.off('mouseup', mouseup);
                 }
-                scope.$watch("ngModel", function() {
-                    divBar.css({width: Math.round(scope.ngModel * barWidth) + 'px'});
-                });
+                scope.$watch("ngModel", init);
+                scope.$watch("totalPages", init);
                 scope.setCurPage = function(event, page) {
                     event.preventDefault();
                     switch(page) {
@@ -86,7 +88,7 @@ angular.module('cns.ui.grow', [])
 angular.module('cns.ui.pagination', [])
     .directive('cnsScrollPagination', ['$timeout', '$document', function($timeout, $document) {
         return {
-            link: function(scope, element, attributes, controllers) {
+            link: function(scope, element, attributes) {
                 scope.pages = new Array(Number(scope.totalPages));
                 scope.revers = angular.isUndefined(attributes.revers) ? false : true;
                 var divPages = angular.element(element[0].querySelector('.cns-scroll-pagination-pages')),
@@ -99,14 +101,24 @@ angular.module('cns.ui.pagination', [])
                     scrollWidth = 0,
                     scale = 0,
                     scrollBarWidth = 0;
-                $timeout(function() {
+                function init() {
                     paginationWidth = divPages[0].scrollWidth;
                     scrollWidth = divScroll[0].scrollWidth;
                     scale = paginationWidth / scrollWidth;
                     scrollBarWidth = scrollWidth / scale;
                     divScrollBar.css({width: Math.round(scrollBarWidth) + 'px'});
                     divScrollButton.css({width: Math.round(scrollBarWidth) + 'px'});
-                }, 0);
+                    if(x + scrollBarWidth > scrollWidth) {
+                        x = scrollWidth - scrollBarWidth;
+                        divScrollBar.css({left: Math.round(x) + 'px'});
+                        divScrollButton.css({left: Math.round(x) + 'px'});
+                    }
+                }
+                $timeout(init, 0);
+                scope.$watch("totalPages", function($old, $new) {
+                    scope.pages = new Array(Number(scope.totalPages));
+                    $timeout(init, 0);
+                });
                 var startX = 0, x = 0;
                 divScrollButton.on('mousedown', function(event) {
                     event.preventDefault();
@@ -165,18 +177,27 @@ angular.module('cns.ui.runner', [])
                     leftWidth = 0,
                     rightWidth = 0,
                     barWidth = 0;
-                $timeout(function() {
-                    scope.w = divLeft[0].clientWidth;
-                    scope.h = divLeft[0].clientHeight;
+                function init() {
+                    scope.ngModel = Number(scope.ngModel);
+                    scope.totalPages = Number(scope.totalPages);
+                    scope.ngModel = scope.ngModel > scope.totalPages ? scope.totalPages : scope.ngModel;
+                    scope.ngModel = scope.ngModel < 1 ? 1 : scope.ngModel;
                     mainWidth = divMain[0].clientWidth;
                     leftWidth = divLeft[0].clientWidth;
                     rightWidth = divRight[0].clientWidth;
                     barWidth = (mainWidth - leftWidth - rightWidth) / scope.totalPages;
-                    divBar.css({left: leftWidth + 'px', width: Math.round(barWidth) + 'px'});
-                }, 0);
-                var startX = 0, x = 0;
+                    if(!move) {
+                        divBar.css({
+                            left: Math.round(leftWidth + (scope.ngModel - 1) * barWidth) + 'px',
+                            width: Math.round(barWidth) + 'px'
+                        });
+                    }
+                }
+                $timeout(init, 0);
+                var startX = 0, x = 0, move = false;
                 divBar.on('mousedown', function(event) {
                     event.preventDefault();
+                    move = true;
                     startX = event.screenX - x;
                     $document.on('mousemove', mousemove);
                     $document.on('mouseup', mouseup);
@@ -186,17 +207,21 @@ angular.module('cns.ui.runner', [])
                         x = event.screenX - startX;
                         divBar.css({left: x + 'px'});
                         scope.$apply( function() {
-                            scope.ngModel = Math.round(x / barWidth);
+                            scope.ngModel = Math.round((x + 0.5 * barWidth) / barWidth);
                         });
                     }
                 }
                 function mouseup() {
+                    move = false;
+                    divBar.css({
+                        left: Math.round(leftWidth + (scope.ngModel - 1) * barWidth) + 'px',
+                        width: Math.round(barWidth) + 'px'
+                    });
                     $document.off('mousemove', mousemove);
                     $document.off('mouseup', mouseup);
                 }
-                scope.$watch("ngModel", function() {
-                    divBar.css({left: Math.round(leftWidth + (scope.ngModel - 1) * barWidth) + 'px'});
-                });
+                scope.$watch("ngModel", init);
+                scope.$watch("totalPages", init);
                 scope.setCurPage = function(event, page) {
                     event.preventDefault();
                     switch(page) {

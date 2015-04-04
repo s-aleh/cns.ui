@@ -19,11 +19,11 @@
 <body ng-app="App" ng-controller="MainCtrl" ng-cloak>
     <h1>Pagination</h1>
     <div class="leftDiv">
-        <cns-scroll-pagination total-pages="30" ng-model="currentPage"></cns-scroll-pagination>
+        <cns-scroll-pagination total-pages="{{totalPages}}" ng-model="currentPage"></cns-scroll-pagination>
         <div class="code">
             <pre>
 &lt;cns-scroll-pagination
-    total-pages="30" ng-model="currentPage" revers>&lt;/cns-scroll-pagination>
+    total-pages="{{totalPages}}" ng-model="currentPage" revers>&lt;/cns-scroll-pagination>
             </pre>
         </div>
     </div>
@@ -40,10 +40,10 @@
 
     <h1>Runner</h1>
     <div class="leftDiv">
-        <cns-runner total-pages="30" ng-model="currentPage"></cns-runner>
+        <cns-runner total-pages="{{totalPages}}" ng-model="currentPage"></cns-runner>
         <div class="code">
             <pre>
-        &lt;cns-runner total-pages="30" ng-model="currentPage">&lt;/cns-runner>
+        &lt;cns-runner total-pages="{{totalPages}} ng-model="currentPage">&lt;/cns-runner>
             </pre>
         </div>
     </div>
@@ -58,10 +58,10 @@
 
     <h1>Grow</h1>
     <div class="leftDiv">
-        <cns-grow total-pages="30" ng-model="currentPage"></cns-grow>
+        <cns-grow total-pages="{{totalPages}}" ng-model="currentPage"></cns-grow>
         <div class="code">
             <pre>
-        &lt;cns-grow total-pages="30" ng-model="currentPage">&lt;/cns-grow>
+        &lt;cns-grow total-pages="{{totalPages}}" ng-model="currentPage">&lt;/cns-grow>
             </pre>
         </div>
     </div>

@@ -24,15 +24,18 @@ angular.module('cns.ui.grow', [])
                     leftWidth = 0,
                     rightWidth = 0,
                     barWidth = 0;
-                $timeout(function() {
-                    scope.w = divLeft[0].clientWidth;
-                    scope.h = divLeft[0].clientHeight;
+                function init() {
+                    scope.ngModel = Number(scope.ngModel);
+                    scope.totalPages = Number(scope.totalPages);
+                    scope.ngModel = scope.ngModel > scope.totalPages ? scope.totalPages : scope.ngModel;
+                    scope.ngModel = scope.ngModel < 1 ? 1 : scope.ngModel;
                     mainWidth = divMain[0].clientWidth;
                     leftWidth = divLeft[0].clientWidth;
                     rightWidth = divRight[0].clientWidth;
                     barWidth = (mainWidth - leftWidth - rightWidth) / scope.totalPages;
-                    divBar.css({left: leftWidth + 'px', width: Math.round(barWidth) + 'px'});
-                }, 0);
+                    divBar.css({left: leftWidth + 'px', width: Math.round(barWidth * scope.ngModel) + 'px'});
+                }
+                $timeout(init, 0);
                 var startX = 0, x = 0;
                 divBar.on('mousedown', function(event) {
                     event.preventDefault();
@@ -52,9 +55,8 @@ angular.module('cns.ui.grow', [])
                     $document.off('mousemove', mousemove);
                     $document.off('mouseup', mouseup);
                 }
-                scope.$watch("ngModel", function() {
-                    divBar.css({width: Math.round(scope.ngModel * barWidth) + 'px'});
-                });
+                scope.$watch("ngModel", init);
+                scope.$watch("totalPages", init);
                 scope.setCurPage = function(event, page) {
                     event.preventDefault();
                     switch(page) {

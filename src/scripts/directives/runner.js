@@ -24,18 +24,27 @@ angular.module('cns.ui.runner', [])
                     leftWidth = 0,
                     rightWidth = 0,
                     barWidth = 0;
-                $timeout(function() {
-                    scope.w = divLeft[0].clientWidth;
-                    scope.h = divLeft[0].clientHeight;
+                function init() {
+                    scope.ngModel = Number(scope.ngModel);
+                    scope.totalPages = Number(scope.totalPages);
+                    scope.ngModel = scope.ngModel > scope.totalPages ? scope.totalPages : scope.ngModel;
+                    scope.ngModel = scope.ngModel < 1 ? 1 : scope.ngModel;
                     mainWidth = divMain[0].clientWidth;
                     leftWidth = divLeft[0].clientWidth;
                     rightWidth = divRight[0].clientWidth;
                     barWidth = (mainWidth - leftWidth - rightWidth) / scope.totalPages;
-                    divBar.css({left: leftWidth + 'px', width: Math.round(barWidth) + 'px'});
-                }, 0);
-                var startX = 0, x = 0;
+                    if(!move) {
+                        divBar.css({
+                            left: Math.round(leftWidth + (scope.ngModel - 1) * barWidth) + 'px',
+                            width: Math.round(barWidth) + 'px'
+                        });
+                    }
+                }
+                $timeout(init, 0);
+                var startX = 0, x = 0, move = false;
                 divBar.on('mousedown', function(event) {
                     event.preventDefault();
+                    move = true;
                     startX = event.screenX - x;
                     $document.on('mousemove', mousemove);
                     $document.on('mouseup', mouseup);
@@ -45,17 +54,21 @@ angular.module('cns.ui.runner', [])
                         x = event.screenX - startX;
                         divBar.css({left: x + 'px'});
                         scope.$apply( function() {
-                            scope.ngModel = Math.round(x / barWidth);
+                            scope.ngModel = Math.round((x + 0.5 * barWidth) / barWidth);
                         });
                     }
                 }
                 function mouseup() {
+                    move = false;
+                    divBar.css({
+                        left: Math.round(leftWidth + (scope.ngModel - 1) * barWidth) + 'px',
+                        width: Math.round(barWidth) + 'px'
+                    });
                     $document.off('mousemove', mousemove);
                     $document.off('mouseup', mouseup);
                 }
-                scope.$watch("ngModel", function() {
-                    divBar.css({left: Math.round(leftWidth + (scope.ngModel - 1) * barWidth) + 'px'});
-                });
+                scope.$watch("ngModel", init);
+                scope.$watch("totalPages", init);
                 scope.setCurPage = function(event, page) {
                     event.preventDefault();
                     switch(page) {
