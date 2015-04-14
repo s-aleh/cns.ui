@@ -689,7 +689,7 @@ $templateCache.put("../src/templates/directives/datepicker.html",
 	"        <div class=\"cns-dp-right\" ng-click=\"setMillennium('next')\">&gt;</div>" +
 	"        <div class=\"cns-dp-close\" ng-click=\"close()\">x</div>" +
 	"        <div class=\"cns-dp-decade\" ng-click=\"setDecade(decade)\" ng-if=\"decade >= startYear - startYear % 10 && decade <= endYear - endYear % 10\"" +
-	"             ng-repeat=\"decade in decades\">{{decade}}-{{decade + 9}}&nbsp;</div>" +
+	"             ng-repeat=\"decade in decades\">{{decade}}- {{decade + 9}}&nbsp;</div>" +
 	"    </div>" +
 	"</div>"
 );
