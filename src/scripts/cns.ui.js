@@ -33,10 +33,62 @@ angular.module('cns.ui.datepicker', [])
         input.on('focus', function() {
             datepicker.css({top: top + height + 2 + 'px', left: left + 'px', display: 'block'});
         });
+
+        var elem = document.getElementById('cns-dp');
+        if (elem.addEventListener) {
+            if ('onwheel' in document) {
+                elem.addEventListener ("wheel", mousewheel, false);
+            } else if ('onmousewheel' in document) {
+                elem.addEventListener ("mousewheel", mousewheel, false);
+            } else {
+                elem.addEventListener ("MozMousePixelScroll", mousewheel, false);
+            }
+        } else {
+            elem.attachEvent ("onmousewheel", mousewheel);
+        }
+        function mousewheel(event) {
+            event.preventDefault();
+            var delta = event.wheelDelta,
+                dx = event.wheelDeltaX || event.deltaX,
+                dy = event.wheelDeltaY || event.deltaY || event.wheelDelta;
+            switch ($scope.view) {
+                case 'days':
+                    if(delta > 0) {
+                        $scope.setMonth('prev');
+                    } else {
+                        $scope.setMonth('next');
+                    }
+                    $scope.$apply();
+                    break;
+                case 'months':
+                    if(delta > 0) {
+                        $scope.setYear('prev');
+                    } else {
+                        $scope.setYear('next');
+                    }
+                    $scope.$apply();
+                    break;
+                case 'years':
+                    if(delta > 0) {
+                        $scope.setDecade('prev');
+                    } else {
+                        $scope.setDecade('next');
+                    }
+                    $scope.$apply();
+                    break;
+                case 'decades':
+                    if(delta > 0) {
+                        $scope.setMillennium('prev');
+                    } else {
+                        $scope.setMillennium('next');
+                    }
+                    $scope.$apply();
+                    break;
+            }
+        }
         $scope.close = function() {
             datepicker.css({display: 'none'});
         };
-
         $scope.shortDays = md.getShortDays();
         $scope.shortMonths = md.getShortNameOfMonths();
         $scope.verifyDate = function(day) {
@@ -656,7 +708,7 @@ angular.module('cns.ui.scroll', [])
 angular.module("../src/templates/directives/datepicker.html", []).run(["$templateCache", function($templateCache) {
 $templateCache.put("../src/templates/directives/datepicker.html",
 	"<input type=\"text\" class=\"cns-dp-input\" ng-model=\"ngModel\">" +
-	"<div class=\"cns-dp\">" +
+	"<div class=\"cns-dp\" id=\"cns-dp\">" +
 	"    <div ng-if=\"view == 'days'\">" +
 	"        <div class=\"cns-dp-left\" ng-click=\"setMonth('prev')\">&lt;</div>" +
 	"        <div class=\"cns-dp-title\"><span ng-click=\"setView('months')\">{{titleDays}}</span></div>" +
