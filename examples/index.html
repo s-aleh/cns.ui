@@ -91,7 +91,7 @@
     </div>
     <div class="rightDiv">
         <h2>Settings</h2>
-        <p><span class="value">cns-scroll</span>: Scrolling. <i>(Default position: rigth, bottom)</i></p>
+        <p><span class="value">cns-scroll</span>: Scrolling. <i>(Default position: right, bottom)</i></p>
         <h4>Optional</h4>
         <p><span class="value value-optional">top</span>: Scrollbar top. <i></i></p>
         <p><span class="value value-optional">left</span>: Scrollbar left. <i></i></p>
@@ -99,14 +99,34 @@
         <p>Use file 'styles/styles.css'</p>
     </div>
     <div class="clear"></div>
+    <h1>Datepicker</h1>
+    <div class="leftDiv">
+        <cns-datepicker ng-model="date" start-year="1970" end-year="2050"></cns-datepicker>
+        <div class="code">
+            <pre>
+&lt;cns-datepicker ng-model="date" start-year="1970" end-year="2050">&lt;/cns-datepicker>
+            </pre>
+        </div>
+    </div>
+    <div class="rightDiv">
+        <h2>Settings</h2>
+        <p><span class="value">date</span>: Date.</p>
+        <h4>Optional</h4>
+        <p><span class="value value-optional">start-year</span><i>(Default: 1900)</i> Start year. <i></i></p>
+        <p><span class="value value-optional">end-year</span><i>(Default: 2099)</i> End year. <i></i></p>
+        <h2>Customize</h2>
+        <p>Use file 'styles/styles.css'</p>
+    </div>
+    <div class="clear"></div>
 
     <script type="text/javascript" src="../src/vendor/angular/angular.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
-    <!--<script type="text/javascript" src="../src/scripts/cns.ui.js"></script>-->
-    <script type="text/javascript" src="../src/scripts/cns.ui.min.js"></script>
+    <script type="text/javascript" src="../src/scripts/cns.ui.js"></script>
+    <!--<script type="text/javascript" src="../src/scripts/cns.ui.min.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/pagination.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/runner.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/grow.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/scroll.js"></script>
+    <script type="text/javascript" src="../src/scripts/directives/datepicker.js"></script>-->
 </body>
 </html>

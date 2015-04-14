@@ -188,3 +188,115 @@
     background-color: #999999;
     cursor: pointer;
 }
+/*
+ * Datepicker
+ */
+.cns-dp-input {
+    padding: 4px;
+    width: 100px;
+    border-radius: 3px;
+    border-width: 1px;
+    font-size: 16px;
+    text-align: center;
+}
+.cns-dp {
+    position: absolute;
+    width: 196px;
+    height: 196px;
+    background-color: #eeeeee;
+    border: #dddddd solid 1px;
+    border-radius: 4px;
+    font-family: sans-serif;
+    padding: 12px 24px;
+    display: none;
+}
+.cns-dp-left, .cns-dp-right {
+    float: left;
+    width: 36px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.cns-dp-title {
+    float: left;
+    width: 124px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+.cns-dp-title span {
+    cursor: pointer;
+}
+.cns-dp-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 6px 0 0;
+    color: #333333;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.cns-dp-short-day {
+    float: left;
+    width: 28px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-style: italic;
+    font-size: 12px;
+}
+.cns-dp-day {
+    float: left;
+    width: 28px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 14px;
+}
+.cns-dp-day-disabled {
+    color: #cccccc;
+}
+.cns-dp-day-enabled:hover {
+    cursor: pointer;
+    background-color: #dddddd;
+    border-radius: 4px;
+}
+.cns-dp-day-current {
+    background-color: #cccccc;
+    border-radius: 4px;
+}
+.cns-dp-month {
+    float: left;
+    width: 49px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    font-size: 16px;
+    color: #222222;
+    cursor: pointer;
+}
+.cns-dp-month:hover {
+    background-color: #dddddd;
+    border-radius: 4px;
+}
+.cns-dp-decade {
+    float: left;
+    width: 49px;
+    text-align: center;
+    font-size: 12px;
+    color: #222222;
+    margin-bottom: 4px;
+    padding: 4px 0;
+    margin-top: 8px;
+}
+.cns-dp-decade:hover {
+    background-color: #dddddd;
+    cursor: pointer;
+    border-radius: 4px;
+}
