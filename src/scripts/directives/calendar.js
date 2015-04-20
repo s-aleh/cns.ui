@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cns.ui.datepicker', [])
-    .controller('DatepickerCtrl', ['$scope', '$element', '$sce', '$attrs', function($scope, $element, $sce, $attrs) {
+angular.module('cns.ui.calendar', [])
+    .controller('CalendarCtrl', ['$scope', '$element', '$sce', '$attrs', function($scope, $element, $sce, $attrs) {
         var md = {
             months: [
                 'January', 'February', 'March', 'April', 'May', 'June',
@@ -22,30 +22,24 @@ angular.module('cns.ui.datepicker', [])
         $scope.arrow = angular.isDefined($attrs.arrow) ? Number($attrs.arrow) : 12;
         var leftPoints = '0,' + $scope.arrow / 2 + ' ' + ($scope.arrow - 2) + ',0 ' + ($scope.arrow - 2) + ',' + $scope.arrow;
         $scope.arrowLeft = $sce.trustAsHtml('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + $scope.arrow + '" height="' + $scope.arrow + '">' +
-        '<polygon points="' + leftPoints + '" class="cns-grow-button" />' +
-        '</svg>');
+            '<polygon points="' + leftPoints + '" class="cns-grow-button" />' +
+            '</svg>');
         var rightPoints = '2,0 ' + $scope.arrow +',' + $scope.arrow / 2 + ' ' + '2,' + $scope.arrow;
         $scope.arrowRight = $sce.trustAsHtml('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + $scope.arrow+ '" height="' + $scope.arrow + '">' +
-        '<polygon points="' + rightPoints+ '" class="cns-grow-button" />' +
-        '</svg>');
-        var top = $element[0].offsetTop,
-            left = $element[0].offsetLeft;
-        var datepicker = angular.element($element[0].querySelector('.cns-dp')),
-            input = angular.element($element[0].querySelector('input'));
-        var height = input[0].offsetHeight;
-        input.on('focus', function() {
-            datepicker.css({top: top + height + 2 + 'px', left: left + 'px', display: 'block'});
-        });
-        if ($element[0].addEventListener) {
+            '<polygon points="' + rightPoints+ '" class="cns-grow-button" />' +
+            '</svg>');
+
+        var calendar = angular.element($element[0].querySelector('.cns-calendar'));
+        if (calendar[0].addEventListener) {
             if ('onwheel' in document) {
-                $element[0].addEventListener ("wheel", mousewheel, false);
+                calendar[0].addEventListener ("wheel", mousewheel, false);
             } else if ('onmousewheel' in document) {
-                $element[0].addEventListener ("mousewheel", mousewheel, false);
+                calendar[0].addEventListener ("mousewheel", mousewheel, false);
             } else {
-                $element[0].addEventListener ("MozMousePixelScroll", mousewheel, false);
+                calendar[0].addEventListener ("MozMousePixelScroll", mousewheel, false);
             }
         } else {
-            $element[0].attachEvent ("onmousewheel", mousewheel);
+            calendar[0].attachEvent ("onmousewheel", mousewheel);
         }
         function mousewheel(event) {
             event.preventDefault();
@@ -87,9 +81,6 @@ angular.module('cns.ui.datepicker', [])
                     break;
             }
         }
-        $scope.close = function() {
-            datepicker.css({display: 'none'});
-        };
         $scope.shortDays = md.getShortDays();
         $scope.shortMonths = md.getShortNameOfMonths();
         $scope.verifyDate = function(day) {
@@ -101,6 +92,17 @@ angular.module('cns.ui.datepicker', [])
             } else {
                 return false;
             }
+        };
+        $scope.verifyMarkDates = function(day) {
+            var dt = angular.copy($scope.dt);
+            dt.setDate(day);
+            for(var date in $scope.dates) {
+                var tmpDate = new Date($scope.dates[date]);
+                if(tmpDate.getFullYear() == dt.getFullYear() && tmpDate.getMonth() == dt.getMonth() && tmpDate.getDate() == dt.getDate()) {
+                    return true;
+                }
+            }
+            return false;
         };
         $scope.setView = function(view) {
             $scope.view = view;
@@ -224,18 +226,14 @@ angular.module('cns.ui.datepicker', [])
                 var m = $scope.dt.getMonth() < 9 ? '0' + ($scope.dt.getMonth() + 1) : $scope.dt.getMonth() + 1;
                 var d = $scope.dt.getDate() < 10 ? '0' + $scope.dt.getDate() : $scope.dt.getDate();
                 $scope.ngModel = m + s + d + s + $scope.dt.getFullYear();
-                $scope.close();
             }
         };
         $scope.$watch('ngModel', function() {
             var expr = /^[0,1][0-9][-,\/][0-3][0-9][-,\/][0-2]\d{3}/;
             if($scope.ngModel.match(expr)) {
-                input.removeClass('cns-dp-input-error');
                 $scope.dt = new Date($scope.ngModel);
                 $scope.titleDays = md.getNameOfMonth($scope.dt.getMonth()) + ' ' + $scope.dt.getFullYear();
                 $scope.days = getDays();
-            } else {
-                input.addClass('cns-dp-input-error');
             }
         });
         function getDecades() {
@@ -285,9 +283,9 @@ angular.module('cns.ui.datepicker', [])
             $scope.view = 'days';
         };
     }])
-    .directive('cnsDatepicker', [function() {
+    .directive('cnsCalendar', [function() {
     return {
-        controller: 'DatepickerCtrl',
+        controller: 'CalendarCtrl',
         link: function(scope, element, attributes, controllers) {
             scope.startYear = angular.isDefined(attributes.startYear) ? Number(attributes.startYear) : 1900;
             scope.endYear = angular.isDefined(attributes.endYear) ? Number(attributes.endYear) : 2099;
@@ -303,16 +301,17 @@ angular.module('cns.ui.datepicker', [])
             }
             var datepickerCtrl = controllers[0];
             if(!datepickerCtrl) {
-                console.log('DatepickerCtrl error');
+                console.log('CalendarCtrl error');
             } else {
                 datepickerCtrl.init();
             }
         },
-        require: ['cnsDatepicker'],
+        require: ['cnsCalendar'],
         scope: {
-            ngModel: '='
+            ngModel: '=',
+            dates: '='
         },
-        templateUrl: '../src/templates/directives/datepicker.html',
+        templateUrl: '../src/templates/directives/calendar.html',
         transclude: true
     };
 }]);

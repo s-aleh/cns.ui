@@ -1,0 +1,44 @@
+@runner-height: 15px;
+@runner-width: 15px;
+@runner-bg-color: #333333;
+@runner-button-color: #333333;
+
+.cns-runner-main {
+  position: relative;
+  width: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.cns-runner-main, .cns-runner-left, .cns-runner-right, .cns-runner-bar, .cns-runner-button-container {
+  height: @runner-height;
+}
+.cns-runner-left, .cns-runner-right, .cns-runner-button-container {
+  width: @runner-height;
+}
+.cns-runner-left, .cns-runner-right {
+  cursor: pointer;
+  text-align: center;
+  position: absolute;
+  top: 0;
+}
+.cns-runner-left {
+  left: 0;
+}
+.cns-runner-right {
+  right: 0;
+}
+.cns-runner-bar {
+  background-color: @runner-bg-color;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 0;
+}
+.cns-runner-button-container {
+  cursor: pointer;
+}
+.cns-runner-button {
+  fill: @runner-button-color;
+}

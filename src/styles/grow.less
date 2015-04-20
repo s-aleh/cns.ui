@@ -1,0 +1,41 @@
+@grow-height: 15px;
+@grow-width: 15px;
+@grow-bg-color: #333333;
+@grow-button-color: #333333;
+
+.cns-grow-main {
+  position: relative;
+  width: 100%;
+}
+.cns-grow-main, .cns-grow-left, .cns-grow-right, .cns-grow-bar, .cns-grow-button-container {
+  height: @grow-height;
+}
+.cns-grow-left, .cns-grow-right, .cns-grow-button-container {
+  width: @grow-width;
+}
+.cns-grow-left, .cns-grow-right {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  text-align: center;
+}
+.cns-grow-left {
+  left: 0;
+}
+.cns-grow-right {
+  right: 0;
+}
+.cns-grow-bar {
+  cursor: pointer;
+  background-color: @grow-bg-color;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 0;
+}
+.cns-grow-button-container {
+  cursor: pointer;
+}
+.cns-grow-button {
+  fill: @grow-button-color;
+}

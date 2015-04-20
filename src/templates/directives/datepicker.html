@@ -1,9 +1,9 @@
 <input type="text" class="cns-dp-input" ng-model="ngModel">
 <div class="cns-dp" id="cns-dp">
     <div ng-if="view == 'days'">
-        <div class="cns-dp-left" ng-click="setMonth('prev')">&lt;</div>
+        <div class="cns-dp-left" ng-click="setMonth('prev')" ng-bind-html="arrowLeft"></div>
         <div class="cns-dp-title"><span ng-click="setView('months')">{{titleDays}}</span></div>
-        <div class="cns-dp-right" ng-click="setMonth('next')">&gt;</div>
+        <div class="cns-dp-right" ng-click="setMonth('next')" ng-bind-html="arrowRight"></div>
         <div class="cns-dp-close" ng-click="close()">x</div>
         <div class="cns-dp-short-day" ng-repeat="shortDay in shortDays">{{shortDay}}</div>
         <div class="cns-dp-day" ng-click="setDate(day)" ng-repeat="day in days track by $index"
@@ -12,24 +12,24 @@
                 'cns-dp-day-disabled': !day[1]}">{{day[0]}}</div>
     </div>
     <div ng-if="view == 'months'">
-        <div class="cns-dp-left" ng-click="setYear('prev')">&lt;</div>
+        <div class="cns-dp-left" ng-click="setYear('prev')" ng-bind-html="arrowLeft"></div>
         <div class="cns-dp-title"><span ng-click="setView('years')">{{titleMonths}}</span></div>
-        <div class="cns-dp-right" ng-click="setYear('next')">&gt;</div>
+        <div class="cns-dp-right" ng-click="setYear('next')" ng-bind-html="arrowRight"></div>
         <div class="cns-dp-close" ng-click="close()">x</div>
         <div class="cns-dp-month" ng-click="setMonth($index)" ng-repeat="shortMonth in shortMonths">{{shortMonth}}</div>
     </div>
     <div ng-if="view == 'years'">
-        <div class="cns-dp-left" ng-click="setDecade('prev')">&lt;</div>
+        <div class="cns-dp-left" ng-click="setDecade('prev')" ng-bind-html="arrowLeft"></div>
         <div class="cns-dp-title"><span ng-click="setView('decades')">{{titleYears}}</span></div>
-        <div class="cns-dp-right" ng-click="setDecade('next')">&gt;</div>
+        <div class="cns-dp-right" ng-click="setDecade('next')" ng-bind-html="arrowRight"></div>
         <div class="cns-dp-close" ng-click="close()">x</div>
         <div class="cns-dp-month" ng-click="setYear(year)" ng-repeat="year in years"
                 ng-if="year >= startYear && year <= endYear">{{year}}</div>
     </div>
     <div ng-if="view == 'decades'">
-        <div class="cns-dp-left" ng-click="setMillennium('prev')">&lt;</div>
+        <div class="cns-dp-left" ng-click="setMillennium('prev')" ng-bind-html="arrowLeft"></div>
         <div class="cns-dp-title">{{titleDecades}}</div>
-        <div class="cns-dp-right" ng-click="setMillennium('next')">&gt;</div>
+        <div class="cns-dp-right" ng-click="setMillennium('next')" ng-bind-html="arrowRight"></div>
         <div class="cns-dp-close" ng-click="close()">x</div>
         <div class="cns-dp-decade" ng-click="setDecade(decade)" ng-if="decade >= startYear - startYear % 10 && decade <= endYear - endYear % 10"
              ng-repeat="decade in decades">{{decade}}- {{decade + 9}}&nbsp;</div>

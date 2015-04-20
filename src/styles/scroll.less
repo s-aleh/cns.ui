@@ -1,0 +1,48 @@
+@scroll-bg-color: #eeeeee;
+@scroll-bar-bg-color: #999999;
+@scroll-height: 6px;
+@scroll-width: 6px;
+
+.cns-scroll {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+.cns-scroll-v {
+  background-color: @scroll-bg-color;
+  border-radius: floor(@scroll-width / 2);
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: @scroll-width;
+}
+.cns-scroll-v-bar {
+  border-radius: floor(@scroll-width / 2);
+  background-color: @scroll-bar-bg-color;
+  cursor: pointer;
+  height: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: @scroll-width;
+}
+.cns-scroll-h {
+  background-color: @scroll-bg-color;
+  border-radius: floor(@scroll-width / 2);
+  bottom: 0;
+  height: @scroll-height;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+.cns-scroll-h-bar {
+  background-color: @scroll-bar-bg-color;
+  border-radius: floor(@scroll-height / 2);
+  bottom: 0;
+  cursor: pointer;
+  height: @scroll-height;
+  left: 0;
+  position: absolute;
+  width: 0;
+}

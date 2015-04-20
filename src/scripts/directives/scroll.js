@@ -89,7 +89,7 @@ angular.module('cns.ui.scroll', [])
                         event.preventDefault();
                         var delta = event.wheelDelta,
                             dx = event.wheelDeltaX || event.deltaX,
-                            dy = event.wheelDeltaY || event.deltaY || event.wheelDelta;
+                            dy = event.wheelDeltaY || -event.deltaY || event.wheelDelta;
                         if(dy > 0 && scope.y > 0) {
                             scope.y -= Math.round(barH / 2);
                             if(scope.y < 0) {

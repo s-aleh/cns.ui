@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>cns-ui</title>
-    <link rel="stylesheet" href="../src/styles/styles.css">
+    <link rel="stylesheet" href="../src/styles/cns-ui.css">
     <style type="text/css">
         [ng:\cloak], [ng-cloak], .ng-cloak { display: none; }
         .leftDiv { float: left; width: 600px; padding: 10px 30px; }
@@ -19,11 +19,11 @@
 <body ng-app="App" ng-controller="MainCtrl" ng-cloak>
     <h1>Pagination</h1>
     <div class="leftDiv">
-        <cns-scroll-pagination total-pages="{{totalPages}}" ng-model="currentPage"></cns-scroll-pagination>
+        <cns-pagination total-pages="{{totalPages}}" ng-model="currentPage"></cns-pagination>
         <div class="code">
             <pre>
-&lt;cns-scroll-pagination
-    total-pages="{{totalPages}}" ng-model="currentPage" revers>&lt;/cns-scroll-pagination>
+&lt;cns-pagination
+    total-pages="{{totalPages}}" ng-model="currentPage" revers>&lt;/cns-pagination>
             </pre>
         </div>
     </div>
@@ -32,7 +32,7 @@
         <p><span class="value">ng-model</span>: Current page number.</p>
         <p><span class="value">total-pages</span>: Total pages.</p>
         <h4>Optional</h4>
-        <p><span class="value value-optional">revers</span> <i>(Default: false)</i> Reverse pages</p>
+        <p><span class="value value-optional">revers</span>: <i>(Default: false)</i> Reverse pages</p>
         <h2>Customize</h2>
         <p>Use file 'styles/styles.css'</p>
     </div>
@@ -58,11 +58,11 @@
 
     <h1>Grow</h1>
     <div class="leftDiv">
-        <cns-grow total-pages="{{totalPages}}" ng-model="currentPage"></cns-grow>
+    <cns-grow total-pages="{{totalPages}}" ng-model="currentPage"></cns-grow>
         <div class="code">
             <pre>
-        &lt;cns-grow total-pages="{{totalPages}}" ng-model="currentPage">&lt;/cns-grow>
-            </pre>
+            &lt;cns-grow total-pages="{{totalPages}}" ng-model="currentPage">&lt;/cns-grow>
+                </pre>
         </div>
     </div>
     <div class="rightDiv">
@@ -85,7 +85,7 @@
         </div>
         <div class="code">
             <pre>
-        &lt;div cns-scroll top left>...&lt;/div>
+            &lt;div cns-scroll top left>...&lt;/div>
             </pre>
         </div>
     </div>
@@ -101,11 +101,11 @@
     <div class="clear"></div>
     <h1>Datepicker</h1>
     <div class="leftDiv">
-        <cns-datepicker ng-model="date" start-year="1970" end-year="2050"></cns-datepicker>
+        <cns-datepicker ng-model="date" start-year="1970" end-year="2050" arrow="12"></cns-datepicker>
         <div class="code">
             <pre>
-&lt;cns-datepicker ng-model="date" start-year="1970" end-year="2050">
-&lt;/cns-datepicker>
+    &lt;cns-datepicker ng-model="date" start-year="1970" end-year="2050" arrow="12">
+    &lt;/cns-datepicker>
             </pre>
         </div>
     </div>
@@ -113,12 +113,71 @@
         <h2>Settings</h2>
         <p><span class="value">date</span>: Date. <i>(Format: mm/dd/yyyy or mm-dd-yyyy)</i></p>
         <h4>Optional</h4>
-        <p><span class="value value-optional">start-year</span><i>(Default: 1900)</i> Start year. <i></i></p>
-        <p><span class="value value-optional">end-year</span><i>(Default: 2099)</i> End year. <i></i></p>
+        <p><span class="value value-optional">start-year</span>: <i>(Default: 1900)</i> Start year.</p>
+        <p><span class="value value-optional">end-year</span>: <i>(Default: 2099)</i> End year.</p>
+        <p><span class="value value-optional">arrow</span>: <i>(Default: 12)</i> Arrow size.</p>
         <h2>Customize</h2>
         <p>Use file 'styles/styles.css'</p>
-        <h2>Note</h2>
-        <p>Can use the mouse wheel.</p>
+    </div>
+    <div class="clear"></div>
+    <div class="leftDiv">
+        <cns-dpl ng-model="date" start-year="1970" end-year="2050" arrow="14"></cns-dpl>
+        <div class="code">
+                <pre>
+    &lt;cns-dpl ng-model="date" start-year="1970" end-year="2050" arrow="14" view-month="dig">
+    &lt;/cns-dpl>
+                </pre>
+        </div>
+    </div>
+    <div class="rightDiv">
+        <h2>Settings</h2>
+        <p><span class="value">date</span>: Date. <i>(Format: mm/dd/yyyy or mm-dd-yyyy)</i></p>
+        <h4>Optional</h4>
+        <p><span class="value value-optional">dates</span>: <i>(Default: null)</i> Array of mark dates.</p>
+        <p><span class="value value-optional">start-year</span>: <i>(Default: 1900)</i> Start year.</p>
+        <p><span class="value value-optional">end-year</span>: <i>(Default: 2099)</i> End year.</p>
+        <p><span class="value value-optional">arrow</span>: <i>(Default: 18)</i> Arrow size.</p>
+        <p><span class="value value-optional">view-month</span>: <i>(Default: null)</i> Months name, "null" - short, "dig" - digits.</p>
+        <h2>Customize</h2>
+        <p>Use file 'styles/styles.css'</p>
+    </div>
+    <div class="clear"></div>
+
+    <h1>Calendar</h1>
+    <div class="leftDiv">
+        <cns-calendar ng-model="date" dates="dates" start-year="1970" end-year="2050" arrow="12"></cns-calendar>
+        <div class="code">
+                <pre>
+    &lt;cns-calendar ng-model="date" date="dates" start-year="1970" end-year="2050" arrow="12">
+    &lt;/cns-calendar>
+                </pre>
+        </div>
+    </div>
+    <div class="rightDiv">
+        <h2>Settings</h2>
+        <p><span class="value">date</span>: Date. <i>(Format: mm/dd/yyyy or mm-dd-yyyy)</i></p>
+        <h4>Optional</h4>
+        <p><span class="value value-optional">dates</span>: <i>(Default: null)</i> Array of mark dates.</p>
+        <p><span class="value value-optional">start-year</span>: <i>(Default: 1900)</i> Start year.</p>
+        <p><span class="value value-optional">end-year</span>: <i>(Default: 2099)</i> End year.</p>
+        <p><span class="value value-optional">arrow</span>: <i>(Default: 12)</i> Arrow size.</p>
+        <h2>Customize</h2>
+        <p>Use file 'styles/styles.css'</p>
+    </div>
+    <div class="clear"></div>
+    <h1>Mousewheel</h1>
+    <div class="leftDiv">
+        <div cns-mousewheel dx="dx" dy="dy">dx: {{dx}}, dy: {{dy}}</div>
+        <div class="code">
+                <pre>
+        &lt;div cns-mousewheel dx="dx" dy="dy">&lt/div>
+                </pre>
+        </div>
+    </div>
+    <div class="rightDiv">
+        <h2>Settings</h2>
+        <p><span class="value">dx</span>: DeltaX.</p>
+        <p><span class="value">dy</span>: DeltaY.</p>
     </div>
     <div class="clear"></div>
 
@@ -130,6 +189,9 @@
     <script type="text/javascript" src="../src/scripts/directives/runner.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/grow.js"></script>
     <script type="text/javascript" src="../src/scripts/directives/scroll.js"></script>
-    <script type="text/javascript" src="../src/scripts/directives/datepicker.js"></script>-->
+    <script type="text/javascript" src="../src/scripts/directives/datepicker.js"></script>
+    <script type="text/javascript" src="../src/scripts/directives/calendar.js"></script>
+    <script type="text/javascript" src="../src/scripts/directives/dpl.js"></script>
+    <script type="text/javascript" src="../src/scripts/directives/mousewheel.js"></script>-->
 </body>
 </html>

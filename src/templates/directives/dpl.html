@@ -1,0 +1,33 @@
+<input type="text" class="cns-dpl-input" ng-model="ngModel">
+<div class="cns-dpl">
+    <div class="cns-dpl-title"><span>Set date</span></div>
+    <div class="cns-dpl-tbl">
+        <div class="cns-dpl-tr">
+            <div class="cns-dpl-td cns-dpl-arrow-height" ng-bind-html="arrowTop" ng-click="setMonth(-1)"></div>
+            <div class="cns-dpl-td cns-dpl-arrow-height" ng-bind-html="arrowTop" ng-click="setDate(-1)"></div>
+            <div class="cns-dpl-td cns-dpl-arrow-height" ng-bind-html="arrowTop" ng-click="setYear(-1)" style="text-align: center"></div>
+        </div>
+        <div class="cns-dpl-tr">
+            <div class="cns-dpl-td"><span>{{monthView(prevDate.month)}}</span></div>
+            <div class="cns-dpl-td"><span>{{dateView(prevDate.date)}}</span></div>
+            <div class="cns-dpl-td"><span>{{prevDate.year}}</span></div>
+        </div>
+        <div class="cns-dpl-tr">
+            <div class="cns-dpl-td" id="cns-dpl-month"><span class="cns-dpl-border">{{monthView(date.month)}}</span></div>
+            <div class="cns-dpl-td" id="cns-dpl-date"><span class="cns-dpl-border">{{dateView(date.date)}}</span></div>
+            <div class="cns-dpl-td" id="cns-dpl-year"><span class="cns-dpl-border">{{date.year}}</span></div>
+        </div>
+        <div class="cns-dpl-tr">
+            <div class="cns-dpl-td"><span>{{monthView(nextDate.month)}}</span></div>
+            <div class="cns-dpl-td"><span>{{dateView(nextDate.date)}}</span></div>
+            <div class="cns-dpl-td"><span>{{nextDate.year}}</span></div>
+        </div>
+        <div class="cns-dpl-tr">
+            <div class="cns-dpl-td cns-dpl-arrow-height" ng-bind-html="arrowBottom" ng-click="setMonth(1)"></div>
+            <div class="cns-dpl-td cns-dpl-arrow-height" ng-bind-html="arrowBottom" ng-click="setDate(1)"></div>
+            <div class="cns-dpl-td cns-dpl-arrow-height" ng-bind-html="arrowBottom" ng-click="setYear(1)" style="text-align: center"></div>
+        </div>
+    </div>
+    <div class="cns-dpl-cancel" ng-click="cancel()">Cancel</div>
+    <div class="cns-dpl-set" ng-click="setNewDate()">Set</div>
+</div>

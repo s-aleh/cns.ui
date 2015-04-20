@@ -1,13 +1,14 @@
 'use strict';
 
-angular.module('cns.ui', ['cns.ui.templates', 'cns.ui.pagination', 'cns.ui.runner', 'cns.ui.grow', 'cns.ui.scroll', 'cns.ui.datepicker']);
+angular.module('cns.ui', ['cns.ui.templates', 'cns.ui.pagination', 'cns.ui.runner', 'cns.ui.grow', 'cns.ui.scroll', 'cns.ui.datepicker',
+    'cns.ui.calendar', 'cns.ui.dpl', 'cns.ui.mousewheel']);
 
-angular.module('cns.ui.templates', ['../src/templates/directives/datepicker.html', '../src/templates/directives/grow.html', '../src/templates/directives/pagination.html', '../src/templates/directives/runner.html', '../src/templates/directives/scroll.html']);
+angular.module('cns.ui.templates', ['../src/templates/directives/calendar.html', '../src/templates/directives/datepicker.html', '../src/templates/directives/dpl.html', '../src/templates/directives/grow.html', '../src/templates/directives/pagination.html', '../src/templates/directives/runner.html', '../src/templates/directives/scroll.html']);
 
 
 
-angular.module('cns.ui.datepicker', [])
-    .controller('DatepickerCtrl', ['$scope', '$element', function($scope, $element) {
+angular.module('cns.ui.calendar', [])
+    .controller('CalendarCtrl', ['$scope', '$element', '$sce', '$attrs', function($scope, $element, $sce, $attrs) {
         var md = {
             months: [
                 'January', 'February', 'March', 'April', 'May', 'June',
@@ -25,6 +26,331 @@ angular.module('cns.ui.datepicker', [])
                 return this.shortDays;
             }
         };
+        $scope.arrow = angular.isDefined($attrs.arrow) ? Number($attrs.arrow) : 12;
+        var leftPoints = '0,' + $scope.arrow / 2 + ' ' + ($scope.arrow - 2) + ',0 ' + ($scope.arrow - 2) + ',' + $scope.arrow;
+        $scope.arrowLeft = $sce.trustAsHtml('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + $scope.arrow + '" height="' + $scope.arrow + '">' +
+            '<polygon points="' + leftPoints + '" class="cns-grow-button" />' +
+            '</svg>');
+        var rightPoints = '2,0 ' + $scope.arrow +',' + $scope.arrow / 2 + ' ' + '2,' + $scope.arrow;
+        $scope.arrowRight = $sce.trustAsHtml('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + $scope.arrow+ '" height="' + $scope.arrow + '">' +
+            '<polygon points="' + rightPoints+ '" class="cns-grow-button" />' +
+            '</svg>');
+
+        var calendar = angular.element($element[0].querySelector('.cns-calendar'));
+        if (calendar[0].addEventListener) {
+            if ('onwheel' in document) {
+                calendar[0].addEventListener ("wheel", mousewheel, false);
+            } else if ('onmousewheel' in document) {
+                calendar[0].addEventListener ("mousewheel", mousewheel, false);
+            } else {
+                calendar[0].addEventListener ("MozMousePixelScroll", mousewheel, false);
+            }
+        } else {
+            calendar[0].attachEvent ("onmousewheel", mousewheel);
+        }
+        function mousewheel(event) {
+            event.preventDefault();
+            var delta = event.wheelDelta,
+                dx = event.wheelDeltaX || event.deltaX,
+                dy = event.wheelDeltaY || -event.deltaY || event.wheelDelta;
+            switch ($scope.view) {
+                case 'days':
+                    if(dy > 0) {
+                        $scope.setMonth('prev');
+                    } else {
+                        $scope.setMonth('next');
+                    }
+                    $scope.$apply();
+                    break;
+                case 'months':
+                    if(dy > 0) {
+                        $scope.setYear('prev');
+                    } else {
+                        $scope.setYear('next');
+                    }
+                    $scope.$apply();
+                    break;
+                case 'years':
+                    if(dy > 0) {
+                        $scope.setDecade('prev');
+                    } else {
+                        $scope.setDecade('next');
+                    }
+                    $scope.$apply();
+                    break;
+                case 'decades':
+                    if(dy > 0) {
+                        $scope.setMillennium('prev');
+                    } else {
+                        $scope.setMillennium('next');
+                    }
+                    $scope.$apply();
+                    break;
+            }
+        }
+        $scope.shortDays = md.getShortDays();
+        $scope.shortMonths = md.getShortNameOfMonths();
+        $scope.verifyDate = function(day) {
+            var dt = angular.copy($scope.dt),
+                ngModel = new Date($scope.ngModel);
+            dt.setDate(day);
+            if(ngModel.getFullYear() == dt.getFullYear() && ngModel.getMonth() == dt.getMonth() && ngModel.getDate() == dt.getDate()) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        $scope.verifyMarkDates = function(day) {
+            var dt = angular.copy($scope.dt);
+            dt.setDate(day);
+            for(var date in $scope.dates) {
+                var tmpDate = new Date($scope.dates[date]);
+                if(tmpDate.getFullYear() == dt.getFullYear() && tmpDate.getMonth() == dt.getMonth() && tmpDate.getDate() == dt.getDate()) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        $scope.setView = function(view) {
+            $scope.view = view;
+            switch (view) {
+                case 'months':
+                    $scope.titleMonths = $scope.dt.getFullYear();
+                    break;
+                case 'years':
+                    var start = $scope.dt.getFullYear() - $scope.dt.getFullYear() % 10,
+                        end = start + 9;
+                    $scope.titleYears = start + ' - ' + end;
+                    $scope.years = getYears();
+                    break;
+                case 'decades':
+                    var start = $scope.dt.getFullYear() - $scope.dt.getFullYear() % 100,
+                        end = start + 99;
+                    $scope.titleDecades = start + ' - ' + end;
+                    $scope.decades = getDecades();
+                    break;
+            }
+        };
+        $scope.setMillennium = function (millennium) {
+            var m = $scope.dt.getFullYear() - $scope.dt.getFullYear() % 100;
+            switch (millennium) {
+                case 'prev':
+                    if(m - $scope.startYear > 0) {
+                        $scope.dt.setFullYear(m - 100);
+                    } else {
+                        $scope.dt.setFullYear($scope.startYear);
+                    }
+                    break;
+                case 'next':
+                    if(m + 100 < $scope.endYear) {
+                        $scope.dt.setFullYear(m + 100);
+                    }
+                    break;
+            }
+            var start = $scope.dt.getFullYear() - $scope.dt.getFullYear() % 100,
+                end = start + 99;
+            $scope.titleDecades = start + ' - ' + end;
+            $scope.decades = getDecades();
+        };
+        $scope.setDecade = function(decade) {
+            switch (decade) {
+                case 'prev':
+                    if($scope.dt.getFullYear() - $scope.startYear > 10) {
+                        $scope.dt.setFullYear($scope.dt.getFullYear() - 10);
+                    } else {
+                        $scope.dt.setFullYear($scope.startYear);
+                    }
+                    break;
+                case 'next':
+                    if($scope.endYear - $scope.dt.getFullYear() > 10) {
+                        $scope.dt.setFullYear($scope.dt.getFullYear() + 10);
+                    } else {
+                        $scope.dt.setFullYear($scope.endYear);
+                    }
+                    break;
+                default:
+                    $scope.dt.setFullYear(decade);
+                    $scope.setView('years');
+                    break;
+            }
+            var start = $scope.dt.getFullYear() - $scope.dt.getFullYear() % 10,
+                end = start + 9;
+            $scope.titleYears = start + ' - ' + end;
+            $scope.years = getYears();
+        };
+        $scope.setYear = function (year) {
+            switch (year) {
+                case 'prev':
+                    if($scope.dt.getFullYear() > $scope.startYear) {
+                        $scope.dt.setFullYear($scope.dt.getFullYear() - 1);
+                        $scope.titleMonths = $scope.dt.getFullYear();
+                    }
+                    break;
+                case 'next':
+                    if($scope.dt.getFullYear() < $scope.endYear) {
+                        $scope.dt.setFullYear($scope.dt.getFullYear() + 1);
+                        $scope.titleMonths = $scope.dt.getFullYear();
+                    }
+                    break;
+                default:
+                    $scope.dt.setFullYear(year);
+                    $scope.titleMonths = $scope.dt.getFullYear();
+                    $scope.setView('months');
+                    break;
+            }
+        };
+        $scope.setMonth = function(month) {
+            var d = new Date($scope.dt);
+            switch (month) {
+                case 'prev':
+                    d.setMonth(d.getMonth() - 1);
+                    if(d.getFullYear() >= $scope.startYear) {
+                        $scope.dt.setMonth($scope.dt.getMonth() - 1, 1);
+                        $scope.titleDays = md.getNameOfMonth($scope.dt.getMonth()) + ' ' + $scope.dt.getFullYear();
+                        $scope.days = getDays();
+                    }
+                    break;
+                case 'next':
+                    d.setMonth(d.getMonth() + 1);
+                    if(d.getFullYear() <= $scope.endYear) {
+                        $scope.dt.setMonth($scope.dt.getMonth() + 1, 1);
+                        $scope.titleDays = md.getNameOfMonth($scope.dt.getMonth()) + ' ' + $scope.dt.getFullYear();
+                        $scope.days = getDays();
+                    }
+                    break;
+                default:
+                    $scope.dt.setMonth(month, 1);
+                    $scope.titleDays = md.getNameOfMonth($scope.dt.getMonth()) + ' ' + $scope.dt.getFullYear();
+                    $scope.days = getDays();
+                    $scope.setView('days');
+                    break;
+            }
+        };
+        $scope.setDate = function(day) {
+            if(day[1]) {
+                $scope.dt.setDate(day[0]);
+                var s = $scope.ngModel.indexOf('-') > 0 ? '-' : '/';
+                var m = $scope.dt.getMonth() < 9 ? '0' + ($scope.dt.getMonth() + 1) : $scope.dt.getMonth() + 1;
+                var d = $scope.dt.getDate() < 10 ? '0' + $scope.dt.getDate() : $scope.dt.getDate();
+                $scope.ngModel = m + s + d + s + $scope.dt.getFullYear();
+            }
+        };
+        $scope.$watch('ngModel', function() {
+            var expr = /^[0,1][0-9][-,\/][0-3][0-9][-,\/][0-2]\d{3}/;
+            if($scope.ngModel.match(expr)) {
+                $scope.dt = new Date($scope.ngModel);
+                $scope.titleDays = md.getNameOfMonth($scope.dt.getMonth()) + ' ' + $scope.dt.getFullYear();
+                $scope.days = getDays();
+            }
+        });
+        function getDecades() {
+            var decades = [];
+            var start = $scope.dt.getFullYear() - $scope.dt.getFullYear() % 100,
+                end = start + 99;
+            for(var i = start; i <= end; i+=10) {
+                decades.push(i);
+            }
+            return decades;
+        }
+        function getYears() {
+            var years = [];
+            var start = $scope.dt.getFullYear() - $scope.dt.getFullYear() % 10,
+                end = start + 9;
+            for(var i = start; i <= end; i++) {
+                years.push(i);
+            }
+            return years;
+        }
+        function getDays() {
+            var days = [],
+                day = new Date($scope.dt);
+            day.setDate(1);
+            var numberOfFirstDay = day.getDay();
+            var countDays = getLastDayOfMonth($scope.dt.getFullYear(), $scope.dt.getMonth()),
+                prevCountDays = getLastDayOfMonth($scope.dt.getFullYear(), $scope.dt.getMonth() - 1);
+            day.setDate(countDays);
+            var numberOfLastDay = day.getDay();
+            for(var i = prevCountDays - numberOfFirstDay + 1; i <= prevCountDays; i++) {
+                days.push([i, 0]);
+            }
+            for(var i = 1; i <= countDays; i++) {
+                days.push([i, 1]);
+            }
+            for(var i = 1; i < 7 - numberOfLastDay; i++) {
+                days.push([i, 0]);
+            }
+            return days;
+        }
+        function getLastDayOfMonth(year, month) {
+            var date = new Date(year, month + 1, 0);
+            return date.getDate();
+        }
+        this.init = function() {
+            $scope.shortMonth = md.getNameOfMonth($scope.dt.getMonth());
+            $scope.view = 'days';
+        };
+    }])
+    .directive('cnsCalendar', [function() {
+    return {
+        controller: 'CalendarCtrl',
+        link: function(scope, element, attributes, controllers) {
+            scope.startYear = angular.isDefined(attributes.startYear) ? Number(attributes.startYear) : 1900;
+            scope.endYear = angular.isDefined(attributes.endYear) ? Number(attributes.endYear) : 2099;
+            if(!scope.ngModel) {
+                scope.dt = new Date();
+            } else {
+                var expr = /^[0,1][0-9][-,\/][0-3][0-9][-,\/][0-2]\d{3}/;
+                if(scope.ngModel.match(expr)) {
+                    scope.dt = new Date(scope.ngModel);
+                } else {
+                    scope.dt = new Date();
+                }
+            }
+            var datepickerCtrl = controllers[0];
+            if(!datepickerCtrl) {
+                console.log('CalendarCtrl error');
+            } else {
+                datepickerCtrl.init();
+            }
+        },
+        require: ['cnsCalendar'],
+        scope: {
+            ngModel: '=',
+            dates: '='
+        },
+        templateUrl: '../src/templates/directives/calendar.html',
+        transclude: true
+    };
+}]);
+
+angular.module('cns.ui.datepicker', [])
+    .controller('DatepickerCtrl', ['$scope', '$element', '$sce', '$attrs', function($scope, $element, $sce, $attrs) {
+        var md = {
+            months: [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ],
+            shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+            shortDays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+            getNameOfMonth: function(month) {
+                return this.months[month];
+            },
+            getShortNameOfMonths: function() {
+                return this.shortMonths;
+            },
+            getShortDays: function() {
+                return this.shortDays;
+            }
+        };
+        $scope.arrow = angular.isDefined($attrs.arrow) ? Number($attrs.arrow) : 12;
+        var leftPoints = '0,' + $scope.arrow / 2 + ' ' + ($scope.arrow - 2) + ',0 ' + ($scope.arrow - 2) + ',' + $scope.arrow;
+        $scope.arrowLeft = $sce.trustAsHtml('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + $scope.arrow + '" height="' + $scope.arrow + '">' +
+        '<polygon points="' + leftPoints + '" class="cns-grow-button" />' +
+        '</svg>');
+        var rightPoints = '2,0 ' + $scope.arrow +',' + $scope.arrow / 2 + ' ' + '2,' + $scope.arrow;
+        $scope.arrowRight = $sce.trustAsHtml('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + $scope.arrow+ '" height="' + $scope.arrow + '">' +
+        '<polygon points="' + rightPoints+ '" class="cns-grow-button" />' +
+        '</svg>');
         var top = $element[0].offsetTop,
             left = $element[0].offsetLeft;
         var datepicker = angular.element($element[0].querySelector('.cns-dp')),
@@ -33,27 +359,25 @@ angular.module('cns.ui.datepicker', [])
         input.on('focus', function() {
             datepicker.css({top: top + height + 2 + 'px', left: left + 'px', display: 'block'});
         });
-
-        var elem = document.getElementById('cns-dp');
-        if (elem.addEventListener) {
+        if ($element[0].addEventListener) {
             if ('onwheel' in document) {
-                elem.addEventListener ("wheel", mousewheel, false);
+                $element[0].addEventListener ("wheel", mousewheel, false);
             } else if ('onmousewheel' in document) {
-                elem.addEventListener ("mousewheel", mousewheel, false);
+                $element[0].addEventListener ("mousewheel", mousewheel, false);
             } else {
-                elem.addEventListener ("MozMousePixelScroll", mousewheel, false);
+                $element[0].addEventListener ("MozMousePixelScroll", mousewheel, false);
             }
         } else {
-            elem.attachEvent ("onmousewheel", mousewheel);
+            $element[0].attachEvent ("onmousewheel", mousewheel);
         }
         function mousewheel(event) {
             event.preventDefault();
             var delta = event.wheelDelta,
                 dx = event.wheelDeltaX || event.deltaX,
-                dy = event.wheelDeltaY || event.deltaY || event.wheelDelta;
+                dy = event.wheelDeltaY || -event.deltaY || event.wheelDelta;
             switch ($scope.view) {
                 case 'days':
-                    if(delta > 0) {
+                    if(dy > 0) {
                         $scope.setMonth('prev');
                     } else {
                         $scope.setMonth('next');
@@ -61,7 +385,7 @@ angular.module('cns.ui.datepicker', [])
                     $scope.$apply();
                     break;
                 case 'months':
-                    if(delta > 0) {
+                    if(dy > 0) {
                         $scope.setYear('prev');
                     } else {
                         $scope.setYear('next');
@@ -69,7 +393,7 @@ angular.module('cns.ui.datepicker', [])
                     $scope.$apply();
                     break;
                 case 'years':
-                    if(delta > 0) {
+                    if(dy > 0) {
                         $scope.setDecade('prev');
                     } else {
                         $scope.setDecade('next');
@@ -77,7 +401,7 @@ angular.module('cns.ui.datepicker', [])
                     $scope.$apply();
                     break;
                 case 'decades':
-                    if(delta > 0) {
+                    if(dy > 0) {
                         $scope.setMillennium('prev');
                     } else {
                         $scope.setMillennium('next');
@@ -229,9 +553,12 @@ angular.module('cns.ui.datepicker', [])
         $scope.$watch('ngModel', function() {
             var expr = /^[0,1][0-9][-,\/][0-3][0-9][-,\/][0-2]\d{3}/;
             if($scope.ngModel.match(expr)) {
+                input.removeClass('cns-dp-input-error');
                 $scope.dt = new Date($scope.ngModel);
                 $scope.titleDays = md.getNameOfMonth($scope.dt.getMonth()) + ' ' + $scope.dt.getFullYear();
                 $scope.days = getDays();
+            } else {
+                input.addClass('cns-dp-input-error');
             }
         });
         function getDecades() {
@@ -310,6 +637,241 @@ angular.module('cns.ui.datepicker', [])
         },
         templateUrl: '../src/templates/directives/datepicker.html',
         transclude: true
+    };
+}]);
+
+angular.module('cns.ui.dpl', [])
+.controller('DplCtrl', ['$scope', '$element', '$sce', '$attrs', function($scope, $element, $sce, $attrs) {
+    var md = {
+        months: [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ],
+        shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+        getNameOfMonth: function(month) {
+            return this.months[month];
+        },
+        getShortNameOfMonth: function(month) {
+                return this.shortMonths[month];
+        }
+    };
+    $scope.arrow = angular.isDefined($attrs.arrow) ? $attrs.arrow : 18;
+    var topPoints = '0,' + $scope.arrow + ' ' + ($scope.arrow / 2) + ',' + $scope.arrow / 2 + ' ' + $scope.arrow + ',' + $scope.arrow;
+    $scope.arrowTop = $sce.trustAsHtml('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + $scope.arrow + '" height="' + $scope.arrow + '">' +
+    '<polygon class="cns-dpl-svg" points="' + topPoints + '" class="cns-grow-button" />' +
+    '</svg>');
+    var bottomPoints = '0,0 ' + $scope.arrow +',0 ' + $scope.arrow / 2 + ',' + $scope.arrow / 2;
+    $scope.arrowBottom = $sce.trustAsHtml('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + $scope.arrow+ '" height="' + $scope.arrow + '">' +
+    '<polygon class="cns-dpl-svg" points="' + bottomPoints+ '" class="cns-grow-button" />' +
+    '</svg>');
+    var divDate = angular.element($element[0].querySelector('.cns-dpl'));
+    var top = $element[0].offsetTop,
+        left = $element[0].offsetLeft;
+    var input = angular.element($element[0].querySelector('input'));
+    var height = input[0].offsetHeight;
+    input.on('focus', function() {
+        divDate.css({top: top + height + 2 + 'px', left: left + 'px', display: 'block'});
+    });
+
+    var divM = angular.element($element[0].querySelector('#cns-dpl-month')),
+        divD = angular.element($element[0].querySelector('#cns-dpl-date')),
+        divY = angular.element($element[0].querySelector('#cns-dpl-year'));
+    function addEvt (e, mousewheel) {
+        if (e.addEventListener) {
+            if ('onwheel' in document) {
+                e.addEventListener ("wheel", mousewheel, false);
+            } else if ('onmousewheel' in document) {
+                e.addEventListener ("mousewheel", mousewheel, false);
+            } else {
+                e.addEventListener ("MozMousePixelScroll", mousewheel, false);
+            }
+        } else {
+            e.attachEvent ("onmousewheel", mousewheel);
+        }
+    }
+    function mousewheelMonth(event) {
+        event.preventDefault();
+        var delta = event.wheelDelta,
+            dx = event.wheelDeltaX || event.deltaX,
+            dy = event.wheelDeltaY || -event.deltaY || event.wheelDelta;
+        if(dy < 0) {
+            $scope.setMonth(1);
+            $scope.$apply();
+        }
+        if(dy > 0) {
+            $scope.setMonth(-1);
+            $scope.$apply();
+        }
+    }
+    function mousewheelDate(event) {
+        event.preventDefault();
+        var delta = event.wheelDelta,
+            dx = event.wheelDeltaX || event.deltaX,
+            dy = event.wheelDeltaY || -event.deltaY || event.wheelDelta;
+        if(dy < 0) {
+            $scope.setDate(1);
+            $scope.$apply();
+        }
+        if(dy > 0) {
+            $scope.setDate(-1);
+            $scope.$apply();
+        }
+    }
+    function mousewheelYear(event) {
+        event.preventDefault();
+        var delta = event.wheelDelta,
+            dx = event.wheelDeltaX || event.deltaX,
+            dy = event.wheelDeltaY || -event.deltaY || event.wheelDelta;
+        if(dy < 0) {
+            $scope.setYear(1);
+            $scope.$apply();
+        }
+        if(dy > 0) {
+            $scope.setYear(-1);
+            $scope.$apply();
+        }
+    }
+    addEvt(divM[0], mousewheelMonth);
+    addEvt(divD[0], mousewheelDate);
+    addEvt(divY[0], mousewheelYear);
+    $scope.setNewDate = function() {
+        $scope.dt.setFullYear($scope.date.year);
+        $scope.dt.setMonth($scope.date.month);
+        $scope.dt.setDate($scope.date.date);
+        var s = $scope.ngModel.indexOf('-') > 0 ? '-' : '/';
+        var m = $scope.date.month < 10 ? '0' + $scope.date.month : $scope.date.month;
+        var d = $scope.date.date < 10 ? '0' + $scope.date.date : $scope.date.date;
+        $scope.ngModel = m + s + d + s + $scope.date.year;
+        divDate.css({display: 'none'});
+    };
+    $scope.cancel = function() {
+        divDate.css({display: 'none'});
+    };
+    $scope.monthView = function(month) {
+        switch ($scope.viewMonth) {
+            case 'dig':
+                return month < 10 ? '0' + month : month;
+                break;
+            default:
+                return md.getShortNameOfMonth(month - 1);
+                break;
+        }
+    };
+    $scope.dateView = function(date) {
+        return date < 10 ? '0' + date : date;
+    };
+    $scope.setMonth = function(delta) {
+        if(delta < 0) {
+            $scope.date.month = $scope.date.month == 1 ? 12 : $scope.date.month + delta;
+            $scope.prevDate.month = $scope.date.month == 1 ? 12 : $scope.date.month - 1;
+            $scope.nextDate.month = $scope.date.month == 12 ? 1 : $scope.date.month + 1;
+        }
+        if(delta > 0) {
+            $scope.date.month = $scope.date.month == 12 ? 1 : $scope.date.month + delta;
+            $scope.prevDate.month = $scope.date.month == 1 ? 12 : $scope.date.month - 1;
+            $scope.nextDate.month = $scope.date.month == 12 ? 1 : $scope.date.month + 1;
+        }
+        var countDay = getLastDayOfMonth($scope.date.year, $scope.date.month - 1);
+        if($scope.date.date > countDay) {
+            $scope.date.date = countDay;
+        }
+        $scope.prevDate.date = $scope.date.date == 1 ? countDay : $scope.date.date - 1;
+        $scope.nextDate.date = $scope.date.date == countDay ? 1 : $scope.date.date + 1;
+    };
+    $scope.setYear = function(delta) {
+        if(delta < 0 && $scope.date.year > $scope.startYear) {
+            $scope.prevDate.year--;
+            $scope.date.year--;
+            $scope.nextDate.year--;
+        }
+        if(delta > 0 && $scope.date.year < $scope.endYear) {
+            $scope.prevDate.year++;
+            $scope.date.year++;
+            $scope.nextDate.year++;
+        }
+        if($scope.date.month == 2) {
+            var countDay = getLastDayOfMonth($scope.date.year, $scope.date.month - 1);
+            if($scope.date.date > countDay) {
+                $scope.date.date = countDay;
+            }
+            $scope.prevDate.date = $scope.date.date == 1 ? countDay : $scope.date.date - 1;
+            $scope.nextDate.date = $scope.date.date == countDay ? 1 : $scope.date.date + 1;
+        }
+    };
+    $scope.setDate = function(delta) {
+        var countDay = getLastDayOfMonth($scope.date.year, $scope.date.month - 1);
+        if(delta < 0) {
+            $scope.nextDate.date = $scope.date.date;
+            $scope.date.date = $scope.prevDate.date;
+            $scope.prevDate.date = $scope.prevDate.date == 1 ? countDay : $scope.prevDate.date + delta ;
+        }
+        if(delta > 0) {
+            $scope.prevDate.date = $scope.date.date;
+            $scope.date.date = $scope.nextDate.date;
+            $scope.nextDate.date = $scope.nextDate.date == countDay ? 1 : $scope.nextDate.date + delta;
+        }
+    };
+    $scope.$watch('ngModel', function() {
+        $scope.dt = new Date($scope.ngModel);
+        $scope.prevDate = getMDY(-1);
+        $scope.date = getMDY(0);
+        $scope.nextDate = getMDY(1);
+    });
+    function getMDY(delta) {
+        var countDay = getLastDayOfMonth($scope.dt.getFullYear(), $scope.dt.getMonth()),
+            countPrevDay = getLastDayOfMonth($scope.dt.getFullYear(), $scope.dt.getMonth() - 1);
+        var d = $scope.dt.getDate() + delta,
+            m = $scope.dt.getMonth() + delta + 1,
+            y = $scope.dt.getFullYear() + delta;
+        if(d == 0) {
+            d = countPrevDay;
+        } else if (d > countDay) {
+            d = 1;
+        }
+        if(m < 1) {
+            m = 12;
+        } else if(m == 13) {
+            m = 1;
+        }
+        return { month: m, date: d, year: y };
+    }
+    function getLastDayOfMonth(year, month) {
+        var date = new Date(year, month + 1, 0);
+        return date.getDate();
+    }
+    this.init = function() {
+
+    };
+}])
+.directive('cnsDpl', [function() {
+   return {
+       controller: 'DplCtrl',
+       link: function(scope, element, attributes, controllers) {
+           scope.startYear = angular.isDefined(attributes.startYear) ? Number(attributes.startYear) : 1900;
+           scope.endYear = angular.isDefined(attributes.endYear) ? Number(attributes.endYear) : 2099;
+           scope.viewMonth = angular.isDefined(attributes.viewMonth) ? attributes.viewMonth : null;
+           if(!scope.ngModel) {
+               scope.dt = new Date();
+           } else {
+               var expr = /^[0,1][0-9][-,\/][0-3][0-9][-,\/][0-2]\d{3}/;
+               if(scope.ngModel.match(expr)) {
+                   scope.dt = new Date(scope.ngModel);
+               } else {
+                   scope.dt = new Date();
+               }
+           }
+           var dplCtrl = controllers[0];
+           if(!dplCtrl) {
+               console.log('DplCtrl error');
+           } else {
+               dplCtrl.init();
+           }
+       },
+       require: ['cnsDpl'],
+       scope: {
+           ngModel: '='
+       },
+       templateUrl: '../src/templates/directives/dpl.html'
     };
 }]);
 
@@ -392,16 +954,50 @@ angular.module('cns.ui.grow', [])
     }]);
 
 
+angular.module('cns.ui.mousewheel', [])
+    .directive('cnsMousewheel', [function() {
+        return {
+            link: function(scope, element) {
+                if (element[0].addEventListener) {
+                    if ('onwheel' in document) {
+                        element[0].addEventListener ("wheel", mousewheel, false);
+                    } else if ('onmousewheel' in document) {
+                        element[0].addEventListener ("mousewheel", mousewheel, false);
+                    } else {
+                        element[0].addEventListener ("MozMousePixelScroll", mousewheel, false);
+                    }
+                } else {
+                    element[0].attachEvent ("onmousewheel", mousewheel);
+                }
+                function mousewheel(event) {
+                    event.preventDefault();
+                    var delta = event.wheelDelta,
+                        dx = event.wheelDeltaX || event.deltaX,
+                        dy = event.wheelDeltaY || -event.deltaY || event.wheelDelta;
+                    scope.dx = dx;
+                    scope.dy = dy;
+                    scope.$apply();
+                }
+            },
+            restrict: 'A',
+            scope: {
+                dx: '=',
+                dy: '='
+            }
+        }
+    }]);
+
 angular.module('cns.ui.pagination', [])
-    .directive('cnsScrollPagination', ['$timeout', '$document', function($timeout, $document) {
+    .directive('cnsPagination', ['$timeout', '$document', function($timeout, $document) {
         return {
             link: function(scope, element, attributes) {
                 scope.pages = new Array(Number(scope.totalPages));
                 scope.revers = angular.isUndefined(attributes.revers) ? false : true;
-                var divPages = angular.element(element[0].querySelector('.cns-scroll-pagination-pages')),
-                    divScroll = angular.element(element[0].querySelector('.cns-scroll-pagination')),
-                    divScrollBar = angular.element(element[0].querySelector('.cns-scroll-pagination-bar')),
-                    divScrollButton = angular.element(element[0].querySelector('.cns-scroll-pagination-button')),
+                var pagination = element[0],
+                    divPages = angular.element(element[0].querySelector('.cns-pagination-pages')),
+                    divScroll = angular.element(element[0].querySelector('.cns-pagination-scroll')),
+                    divScrollBar = angular.element(element[0].querySelector('.cns-pagination-bar')),
+                    divScrollButton = angular.element(element[0].querySelector('.cns-pagination-button')),
                     slider = angular.element(element[0].querySelector('#cns-ps')),
                     containerSlider = angular.element(element[0].querySelector('#cns-psc'));
                 var paginationWidth = 0,
@@ -421,12 +1017,53 @@ angular.module('cns.ui.pagination', [])
                         divScrollButton.css({left: Math.round(x) + 'px'});
                     }
                 }
+                if (pagination.addEventListener) {
+                    if ('onwheel' in document) {
+                        pagination.addEventListener ("wheel", mousewheel, false);
+                    } else if ('onmousewheel' in document) {
+                        pagination.addEventListener ("mousewheel", mousewheel, false);
+                    } else {
+                        pagination.addEventListener ("MozMousePixelScroll", mousewheel, false);
+                    }
+                } else {
+                    pagination.attachEvent ("onmousewheel", mousewheel);
+                }
+                function mousewheel(event) {
+                    event.preventDefault();
+                    var delta = event.wheelDelta,
+                        dx = event.wheelDeltaX || event.deltaX,
+                        dy = event.wheelDeltaY || - event.deltaY || event.wheelDelta;
+                    if(dy < 0) {
+                        if(Math.round(x + scrollBarWidth) < Math.round(scrollWidth - scrollBarWidth)) {
+                            x += Math.round(scrollBarWidth);
+                            setPos();
+                        } else {
+                            x = Math.round(scrollWidth - scrollBarWidth);
+                            setPos();
+                        }
+                    }
+                    if(dy > 0) {
+                        if(Math.round(x - scrollBarWidth) > 0) {
+                            x -= Math.round(scrollBarWidth);
+                            setPos();
+                        } else {
+                            x = 0;
+                            setPos();
+                        }
+                    }
+                }
                 $timeout(init, 0);
-                scope.$watch("totalPages", function($old, $new) {
+                scope.$watch("totalPages", function() {
                     scope.pages = new Array(Number(scope.totalPages));
                     $timeout(init, 0);
                 });
                 var startX = 0, x = 0;
+                function setPos () {
+                    divScrollBar.css({left: x + 'px'});
+                    divScrollButton.css({left: x + 'px'});
+                    var left = Math.ceil( paginationWidth / x * scale);
+                    divPages[0].scrollLeft = Math.ceil(x * scale);
+                }
                 divScrollButton.on('mousedown', function(event) {
                     event.preventDefault();
                     startX = event.screenX - x;
@@ -640,7 +1277,7 @@ angular.module('cns.ui.scroll', [])
                         event.preventDefault();
                         var delta = event.wheelDelta,
                             dx = event.wheelDeltaX || event.deltaX,
-                            dy = event.wheelDeltaY || event.deltaY || event.wheelDelta;
+                            dy = event.wheelDeltaY || -event.deltaY || event.wheelDelta;
                         if(dy > 0 && scope.y > 0) {
                             scope.y -= Math.round(barH / 2);
                             if(scope.y < 0) {
@@ -705,14 +1342,55 @@ angular.module('cns.ui.scroll', [])
             transclude: true
         }
     }]);
+angular.module("../src/templates/directives/calendar.html", []).run(["$templateCache", function($templateCache) {
+$templateCache.put("../src/templates/directives/calendar.html",
+	"<div class=\"cns-calendar\">" +
+	"    <div ng-if=\"view == 'days'\">" +
+	"        <div class=\"cns-calendar-left\" ng-click=\"setMonth('prev')\" ng-bind-html=\"arrowLeft\"></div>" +
+	"        <div class=\"cns-calendar-title\"><span ng-click=\"setView('months')\">{{titleDays}}</span></div>" +
+	"        <div class=\"cns-calendar-right\" ng-click=\"setMonth('next')\" ng-bind-html=\"arrowRight\"></div>" +
+	"        <div class=\"cns-calendar-short-day\" ng-repeat=\"shortDay in shortDays\">{{shortDay}}</div>" +
+	"        <div class=\"cns-calendar-day\" ng-click=\"setDate(day)\" ng-repeat=\"day in days track by $index\"" +
+	"                ng-class=\"{'cns-calendar-day-enabled': day[1] && !verifyDate(day[0]) && !verifyMarkDates(day[0])," +
+	"                'cns-calendar-day-mark': day[1] && !verifyDate(day[0]) && verifyMarkDates(day[0])," +
+	"                'cns-calendar-day-current': day[1] && verifyDate(day[0])," +
+	"                'cns-calendar-day-disabled': !day[1]}\">{{day[0]}}</div>" +
+	"    </div>" +
+	"    <div ng-if=\"view == 'months'\">" +
+	"        <div class=\"cns-calendar-left\" ng-click=\"setYear('prev')\" ng-bind-html=\"arrowLeft\"></div>" +
+	"        <div class=\"cns-calendar-title\"><span ng-click=\"setView('years')\">{{titleMonths}}</span></div>" +
+	"        <div class=\"cns-calendar-right\" ng-click=\"setYear('next')\" ng-bind-html=\"arrowRight\"></div>" +
+	"        <div class=\"cns-calendar-close\" ng-click=\"close()\">x</div>" +
+	"        <div class=\"cns-calendar-month\" ng-click=\"setMonth($index)\" ng-repeat=\"shortMonth in shortMonths\">{{shortMonth}}</div>" +
+	"    </div>" +
+	"    <div ng-if=\"view == 'years'\">" +
+	"        <div class=\"cns-calendar-left\" ng-click=\"setDecade('prev')\" ng-bind-html=\"arrowLeft\"></div>" +
+	"        <div class=\"cns-calendar-title\"><span ng-click=\"setView('decades')\">{{titleYears}}</span></div>" +
+	"        <div class=\"cns-calendar-right\" ng-click=\"setDecade('next')\" ng-bind-html=\"arrowRight\"></div>" +
+	"        <div class=\"cns-calendar-close\" ng-click=\"close()\">x</div>" +
+	"        <div class=\"cns-calendar-month\" ng-click=\"setYear(year)\" ng-repeat=\"year in years\"" +
+	"                ng-if=\"year >= startYear && year <= endYear\">{{year}}</div>" +
+	"    </div>" +
+	"    <div ng-if=\"view == 'decades'\">" +
+	"        <div class=\"cns-calendar-left\" ng-click=\"setMillennium('prev')\" ng-bind-html=\"arrowLeft\"></div>" +
+	"        <div class=\"cns-calendar-title\">{{titleDecades}}</div>" +
+	"        <div class=\"cns-calendar-right\" ng-click=\"setMillennium('next')\" ng-bind-html=\"arrowRight\"></div>" +
+	"        <div class=\"cns-calendar-close\" ng-click=\"close()\">x</div>" +
+	"        <div class=\"cns-calendar-decade\" ng-click=\"setDecade(decade)\" ng-if=\"decade >= startYear - startYear % 10 && decade <= endYear - endYear % 10\"" +
+	"             ng-repeat=\"decade in decades\">{{decade}}- {{decade + 9}}&nbsp;</div>" +
+	"    </div>" +
+	"</div>"
+);
+}]);
+
 angular.module("../src/templates/directives/datepicker.html", []).run(["$templateCache", function($templateCache) {
 $templateCache.put("../src/templates/directives/datepicker.html",
 	"<input type=\"text\" class=\"cns-dp-input\" ng-model=\"ngModel\">" +
 	"<div class=\"cns-dp\" id=\"cns-dp\">" +
 	"    <div ng-if=\"view == 'days'\">" +
-	"        <div class=\"cns-dp-left\" ng-click=\"setMonth('prev')\">&lt;</div>" +
+	"        <div class=\"cns-dp-left\" ng-click=\"setMonth('prev')\" ng-bind-html=\"arrowLeft\"></div>" +
 	"        <div class=\"cns-dp-title\"><span ng-click=\"setView('months')\">{{titleDays}}</span></div>" +
-	"        <div class=\"cns-dp-right\" ng-click=\"setMonth('next')\">&gt;</div>" +
+	"        <div class=\"cns-dp-right\" ng-click=\"setMonth('next')\" ng-bind-html=\"arrowRight\"></div>" +
 	"        <div class=\"cns-dp-close\" ng-click=\"close()\">x</div>" +
 	"        <div class=\"cns-dp-short-day\" ng-repeat=\"shortDay in shortDays\">{{shortDay}}</div>" +
 	"        <div class=\"cns-dp-day\" ng-click=\"setDate(day)\" ng-repeat=\"day in days track by $index\"" +
@@ -721,28 +1399,66 @@ $templateCache.put("../src/templates/directives/datepicker.html",
 	"                'cns-dp-day-disabled': !day[1]}\">{{day[0]}}</div>" +
 	"    </div>" +
 	"    <div ng-if=\"view == 'months'\">" +
-	"        <div class=\"cns-dp-left\" ng-click=\"setYear('prev')\">&lt;</div>" +
+	"        <div class=\"cns-dp-left\" ng-click=\"setYear('prev')\" ng-bind-html=\"arrowLeft\"></div>" +
 	"        <div class=\"cns-dp-title\"><span ng-click=\"setView('years')\">{{titleMonths}}</span></div>" +
-	"        <div class=\"cns-dp-right\" ng-click=\"setYear('next')\">&gt;</div>" +
+	"        <div class=\"cns-dp-right\" ng-click=\"setYear('next')\" ng-bind-html=\"arrowRight\"></div>" +
 	"        <div class=\"cns-dp-close\" ng-click=\"close()\">x</div>" +
 	"        <div class=\"cns-dp-month\" ng-click=\"setMonth($index)\" ng-repeat=\"shortMonth in shortMonths\">{{shortMonth}}</div>" +
 	"    </div>" +
 	"    <div ng-if=\"view == 'years'\">" +
-	"        <div class=\"cns-dp-left\" ng-click=\"setDecade('prev')\">&lt;</div>" +
+	"        <div class=\"cns-dp-left\" ng-click=\"setDecade('prev')\" ng-bind-html=\"arrowLeft\"></div>" +
 	"        <div class=\"cns-dp-title\"><span ng-click=\"setView('decades')\">{{titleYears}}</span></div>" +
-	"        <div class=\"cns-dp-right\" ng-click=\"setDecade('next')\">&gt;</div>" +
+	"        <div class=\"cns-dp-right\" ng-click=\"setDecade('next')\" ng-bind-html=\"arrowRight\"></div>" +
 	"        <div class=\"cns-dp-close\" ng-click=\"close()\">x</div>" +
 	"        <div class=\"cns-dp-month\" ng-click=\"setYear(year)\" ng-repeat=\"year in years\"" +
 	"                ng-if=\"year >= startYear && year <= endYear\">{{year}}</div>" +
 	"    </div>" +
 	"    <div ng-if=\"view == 'decades'\">" +
-	"        <div class=\"cns-dp-left\" ng-click=\"setMillennium('prev')\">&lt;</div>" +
+	"        <div class=\"cns-dp-left\" ng-click=\"setMillennium('prev')\" ng-bind-html=\"arrowLeft\"></div>" +
 	"        <div class=\"cns-dp-title\">{{titleDecades}}</div>" +
-	"        <div class=\"cns-dp-right\" ng-click=\"setMillennium('next')\">&gt;</div>" +
+	"        <div class=\"cns-dp-right\" ng-click=\"setMillennium('next')\" ng-bind-html=\"arrowRight\"></div>" +
 	"        <div class=\"cns-dp-close\" ng-click=\"close()\">x</div>" +
 	"        <div class=\"cns-dp-decade\" ng-click=\"setDecade(decade)\" ng-if=\"decade >= startYear - startYear % 10 && decade <= endYear - endYear % 10\"" +
 	"             ng-repeat=\"decade in decades\">{{decade}}- {{decade + 9}}&nbsp;</div>" +
 	"    </div>" +
+	"</div>"
+);
+}]);
+
+angular.module("../src/templates/directives/dpl.html", []).run(["$templateCache", function($templateCache) {
+$templateCache.put("../src/templates/directives/dpl.html",
+	"<input type=\"text\" class=\"cns-dpl-input\" ng-model=\"ngModel\">" +
+	"<div class=\"cns-dpl\">" +
+	"    <div class=\"cns-dpl-title\"><span>Set date</span></div>" +
+	"    <div class=\"cns-dpl-tbl\">" +
+	"        <div class=\"cns-dpl-tr\">" +
+	"            <div class=\"cns-dpl-td cns-dpl-arrow-height\" ng-bind-html=\"arrowTop\" ng-click=\"setMonth(-1)\"></div>" +
+	"            <div class=\"cns-dpl-td cns-dpl-arrow-height\" ng-bind-html=\"arrowTop\" ng-click=\"setDate(-1)\"></div>" +
+	"            <div class=\"cns-dpl-td cns-dpl-arrow-height\" ng-bind-html=\"arrowTop\" ng-click=\"setYear(-1)\" style=\"text-align: center\"></div>" +
+	"        </div>" +
+	"        <div class=\"cns-dpl-tr\">" +
+	"            <div class=\"cns-dpl-td\"><span>{{monthView(prevDate.month)}}</span></div>" +
+	"            <div class=\"cns-dpl-td\"><span>{{dateView(prevDate.date)}}</span></div>" +
+	"            <div class=\"cns-dpl-td\"><span>{{prevDate.year}}</span></div>" +
+	"        </div>" +
+	"        <div class=\"cns-dpl-tr\">" +
+	"            <div class=\"cns-dpl-td\" id=\"cns-dpl-month\"><span class=\"cns-dpl-border\">{{monthView(date.month)}}</span></div>" +
+	"            <div class=\"cns-dpl-td\" id=\"cns-dpl-date\"><span class=\"cns-dpl-border\">{{dateView(date.date)}}</span></div>" +
+	"            <div class=\"cns-dpl-td\" id=\"cns-dpl-year\"><span class=\"cns-dpl-border\">{{date.year}}</span></div>" +
+	"        </div>" +
+	"        <div class=\"cns-dpl-tr\">" +
+	"            <div class=\"cns-dpl-td\"><span>{{monthView(nextDate.month)}}</span></div>" +
+	"            <div class=\"cns-dpl-td\"><span>{{dateView(nextDate.date)}}</span></div>" +
+	"            <div class=\"cns-dpl-td\"><span>{{nextDate.year}}</span></div>" +
+	"        </div>" +
+	"        <div class=\"cns-dpl-tr\">" +
+	"            <div class=\"cns-dpl-td cns-dpl-arrow-height\" ng-bind-html=\"arrowBottom\" ng-click=\"setMonth(1)\"></div>" +
+	"            <div class=\"cns-dpl-td cns-dpl-arrow-height\" ng-bind-html=\"arrowBottom\" ng-click=\"setDate(1)\"></div>" +
+	"            <div class=\"cns-dpl-td cns-dpl-arrow-height\" ng-bind-html=\"arrowBottom\" ng-click=\"setYear(1)\" style=\"text-align: center\"></div>" +
+	"        </div>" +
+	"    </div>" +
+	"    <div class=\"cns-dpl-cancel\" ng-click=\"cancel()\">Cancel</div>" +
+	"    <div class=\"cns-dpl-set\" ng-click=\"setNewDate()\">Set</div>" +
 	"</div>"
 );
 }]);
@@ -759,17 +1475,17 @@ $templateCache.put("../src/templates/directives/grow.html",
 
 angular.module("../src/templates/directives/pagination.html", []).run(["$templateCache", function($templateCache) {
 $templateCache.put("../src/templates/directives/pagination.html",
-	"<div class=\"cns-container\">" +
-	"    <div class=\"cns-scroll-pagination-pages\">" +
+	"<div class=\"cns-pagination\">" +
+	"    <div class=\"cns-pagination-pages\">" +
 	"        <a ng-if=\"!revers\" ng-repeat=\"page in pages track by $index\" href=\"#\" ng-click=\"setCurPage($index + 1)\"" +
-	"           ng-class=\"{'cns-scroll-pagination-current': $index + 1 == ngModel}\">{{$index + 1}}</a>" +
+	"           ng-class=\"{'cns-pagination-current': $index + 1 == ngModel}\">{{$index + 1}}</a>" +
 	"        <a ng-if=\"revers\" ng-repeat=\"page in pages track by $index\" href=\"#\" ng-click=\"setCurPage(totalPages - $index)\"" +
-	"           ng-class=\"{'cns-scroll-pagination-current': totalPages - $index == ngModel}\">{{totalPages - $index}}</a>" +
+	"           ng-class=\"{'cns-pagination-current': totalPages - $index == ngModel}\">{{totalPages - $index}}</a>" +
 	"    </div>" +
-	"    <div class=\"cns-scroll-pagination-container\">" +
-	"        <div class=\"cns-scroll-pagination\">" +
-	"            <div class=\"cns-scroll-pagination-bar\"></div>" +
-	"            <div class=\"cns-scroll-pagination-button\">" +
+	"    <div class=\"cns-pagination-container\">" +
+	"        <div class=\"cns-pagination-scroll\">" +
+	"            <div class=\"cns-pagination-bar\"></div>" +
+	"            <div class=\"cns-pagination-button\">" +
 	"                <span>" +
 	"                    <svg width=\"15\" height=\"15\" id=\"cns-psc\" class=\"cns-pagination-slider-container\">" +
 	"                        <polygon id=\"cns-ps\" class=\"cns-pagination-slider\" points=\"7.5,0 0,15 15,15\" />" +

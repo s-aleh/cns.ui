@@ -1,0 +1,66 @@
+@pagination-bg-color: #eeeeee;
+@pagination-height: 40px;
+@pagination-a-color: #333333;
+@pagination-a-current-bg-color: #bbbbbb;
+@pagination-a-current-color: #ffffff;
+
+.cns-pagination {
+  position: relative;
+  width: 100%;
+}
+.cns-pagination-pages {
+  font-size: 16px;
+  height: @pagination-height;
+  line-height: @pagination-height;
+  overflow: hidden;
+  text-align: justify;
+  text-wrap: none;
+  width: 100%;
+}
+.cns-pagination-pages a {
+  color: @pagination-a-color;
+  padding: 5px 20px;
+  text-align: center;
+  text-decoration: none;
+}
+.cns-pagination-pages a:hover {
+  background-color: @pagination-bg-color;
+  text-decoration: none;
+}
+.cns-pagination-current {
+  background-color: @pagination-a-current-bg-color;
+  color: @pagination-a-current-color !important;
+}
+.cns-pagination-container {
+  position: relative;
+}
+.cns-scroll-pagination {
+  background-color: #dddddd;
+  height: 4px;
+  padding: 0;
+  width: 100%;
+}
+.cns-pagination-bar {
+  background-color: #777777;
+  height: 4px;
+  left: 0;
+  position: absolute;
+  width: 0;
+}
+.cns-pagination-button {
+  left: 0;
+  position: absolute;
+  text-align: center;
+  top: 4px;
+  width: 0;
+}
+.cns-pagination-slider-container {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+}
+.cns-pagination-slider {
+  fill: #777777;
+  stroke: #707070;
+  stroke-width: 1.5;
+}

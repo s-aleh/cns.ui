@@ -1,0 +1,128 @@
+@dp-height: 196px;
+@dp-width: 196px;
+@dp-arrow-width: 36px;
+@dp-arrow-height: 30px;
+@dp-title-width: (@dp-width - @dp-arrow-width * 2);
+@dp-day-height: 24px;
+@dp-short-day-height: 24px;
+@dp-day-width: floor(@dp-width / 7);
+@dp-month-height: 48px;
+@dp-month-width: floor(@dp-width / 4);
+@dp-decade-width: floor(@dp-width / 4);
+@dp-font-color: #222222;
+@dp-font-disabled: #cccccc;
+@dp-bg-color: #eeeeee;
+@dp-border-color: #dddddd;
+@dp-bg-color-hover: #dddddd;
+@dp-bg-color-current: #cccccc;
+@dp-bg-color-error: #ffb591;
+
+.cns-dp-input {
+  border-radius: 3px;
+  border-width: 1px;
+  font-size: 16px;
+  padding: 4px;
+  text-align: center;
+  width: 100px;
+}
+.cns-dp-input-error {
+  background-color: @dp-bg-color-error;
+}
+.cns-dp {
+  background-color: @dp-bg-color;
+  border: @dp-border-color solid 1px;
+  border-radius: 4px;
+  display: none;
+  font-family: sans-serif;
+  height: @dp-height;
+  padding: 12px 24px;
+  position: absolute;
+  width: @dp-width;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.cns-dp-left, .cns-dp-right {
+  cursor: pointer;
+  float: left;
+  height: @dp-arrow-height;
+  line-height: @dp-arrow-height;
+  text-align: center;
+  width: @dp-arrow-width;
+}
+.cns-dp-title {
+  float: left;
+  height: @dp-arrow-height;
+  line-height: @dp-arrow-height;
+  text-align: center;
+  width: @dp-title-width;
+}
+.cns-dp-title span {
+  cursor: pointer;
+}
+.cns-dp-close {
+  cursor: pointer;
+  padding: 2px 6px 0 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.cns-dp-short-day {
+  float: left;
+  font-style: italic;
+  font-size: 12px;
+  height: @dp-short-day-height;
+  line-height: @dp-short-day-height;
+  text-align: center;
+  width: @dp-day-width;
+}
+.cns-dp-day {
+  float: left;
+  font-size: 14px;
+  height: @dp-day-height;
+  line-height: @dp-day-height;
+  text-align: center;
+  width: @dp-day-width;
+}
+.cns-dp-day-disabled {
+  color: @dp-font-disabled;
+}
+.cns-dp-day-enabled:hover {
+  background-color: @dp-bg-color-hover;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cns-dp-day-current {
+  background-color: @dp-bg-color-current;
+  border-radius: 4px;
+}
+.cns-dp-month {
+  cursor: pointer;
+  float: left;
+  font-size: 16px;
+  height: @dp-month-height;
+  line-height: @dp-month-height;
+  text-align: center;
+  width: @dp-month-width;
+}
+.cns-dp-month:hover {
+  background-color: @dp-bg-color-hover;
+  border-radius: 4px;
+}
+.cns-dp-decade {
+  float: left;
+  font-size: 12px;
+  margin-bottom: 4px;
+  margin-top: 8px;
+  padding: 4px 0;
+  text-align: center;
+  width: @dp-decade-width;
+}
+.cns-dp-decade:hover {
+  background-color: @dp-bg-color-hover;
+  border-radius: 4px;
+  cursor: pointer;
+}

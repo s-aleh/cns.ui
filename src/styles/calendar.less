@@ -1,0 +1,124 @@
+@dp-height: 196px;
+@dp-width: 196px;
+@dp-arrow-width: 36px;
+@dp-arrow-height: 30px;
+@dp-title-width: (@dp-width - @dp-arrow-width * 2);
+@dp-day-height: 22px;
+@dp-short-day-height: 24px;
+@dp-day-width: floor(@dp-width / 7 - 2);
+@dp-month-height: 48px;
+@dp-month-width: floor(@dp-width / 4);
+@dp-decade-width: floor(@dp-width / 4);
+@dp-font-color: #222222;
+@dp-font-disabled: #cccccc;
+@dp-bg-color: #eeeeee;
+@dp-border-color: #dddddd;
+@dp-bg-color-hover: #dddddd;
+@dp-bg-color-current: #cccccc;
+
+.cns-calendar {
+  background-color: @dp-bg-color;
+  border: @dp-border-color solid 1px;
+  border-radius: 4px;
+  font-family: sans-serif;
+  height: @dp-height;
+  padding: 12px 24px;
+  width: @dp-width;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.cns-calendar-left, .cns-calendar-right {
+  cursor: pointer;
+  float: left;
+  height: @dp-arrow-height;
+  line-height: @dp-arrow-height;
+  text-align: center;
+  width: @dp-arrow-width;
+}
+.cns-calendar-title {
+  float: left;
+  height: @dp-arrow-height;
+  line-height: @dp-arrow-height;
+  text-align: center;
+  width: @dp-title-width;
+}
+.cns-calendar-title span {
+  cursor: pointer;
+}
+.cns-calendar-close {
+  cursor: pointer;
+  padding: 2px 6px 0 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.cns-calendar-short-day {
+  float: left;
+  font-style: italic;
+  font-size: 12px;
+  height: @dp-short-day-height;
+  line-height: @dp-short-day-height;
+  text-align: center;
+  width: @dp-day-width;
+}
+.cns-calendar-day {
+  border-radius: 4px;
+  border: @dp-bg-color solid 1px;
+  float: left;
+  font-size: 14px;
+  height: @dp-day-height;
+  line-height: @dp-day-height;
+  text-align: center;
+  width: @dp-day-width;
+}
+.cns-calendar-day-disabled {
+  color: @dp-font-disabled;
+}
+.cns-calendar-day-enabled:hover {
+  background-color: @dp-bg-color-hover;
+  border: @dp-bg-color-current solid 1px;
+  cursor: pointer;
+}
+.cns-calendar-day-current {
+  background-color: @dp-bg-color-current;
+  border: @dp-bg-color-current solid 1px;
+  border-radius: 4px;
+}
+.cns-calendar-day-mark {
+  border: @dp-bg-color-current solid 1px;
+  cursor: pointer;
+}
+.cns-calendar-day-mark:hover {
+  background-color: @dp-bg-color-hover;
+}
+.cns-calendar-month {
+  cursor: pointer;
+  float: left;
+  font-size: 16px;
+  height: @dp-month-height;
+  line-height: @dp-month-height;
+  text-align: center;
+  width: @dp-month-width;
+}
+.cns-calendar-month:hover {
+  background-color: @dp-bg-color-hover;
+  border-radius: 4px;
+}
+.cns-calendar-decade {
+  float: left;
+  font-size: 12px;
+  margin-bottom: 4px;
+  margin-top: 8px;
+  padding: 4px 0;
+  text-align: center;
+  width: @dp-decade-width;
+}
+.cns-calendar-decade:hover {
+  background-color: @dp-bg-color-hover;
+  border-radius: 4px;
+  cursor: pointer;
+}

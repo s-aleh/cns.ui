@@ -39,3 +39,13 @@ angular.module('myModule', ['cns.ui']);
 ```html
 <cns-datepicker ng-model="02/23/2012" start-year="1970" end-year="2050"></cns-datepicker>
 ```
+
+##Calendar
+```html
+<cns-calendar ng-model="date" dates="dates" start-year="1970" end-year="2050""></cns-calendar>
+```
+
+##Mousewheel
+```html
+<div cns-mousewheel dx="dx" dy="dy"></div>
+```
